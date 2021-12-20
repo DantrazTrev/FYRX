@@ -1,13 +1,17 @@
 import './App.css';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Home from './pages/Home';
-import { Animate } from './utils/animation';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Animate } from './utils/animation';
 import Cam from './pages/Cam';
 function App() {
-  Animate();
+  const canvasRef = useRef();
+  useEffect(() => {
+    Animate(canvasRef);
+  }, []);
   return (
     <>
+      <canvas ref={canvasRef} class='orb-canvas'></canvas>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />

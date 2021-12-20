@@ -14,7 +14,7 @@ function map(n, start1, end1, start2, end2) {
 }
 
 // Create a new simplex noise instance
-
+const simplex = new SimplexNoise();
 // ColorPalette class
 class ColorPalette {
   constructor() {
@@ -116,8 +116,7 @@ class Orb {
 
   setBounds() {
     // how far from the { x, y } origin can each orb move
-    const maxDist =
-      window.innerWidth < 1000 ? window.innerWidth / 3 : window.innerWidth / 5;
+    const maxDist = window.innerWidth / 2;
     // the { x, y } origin for each orb (the bottom right of the screen)
     const originX = window.innerWidth / 1.25;
     const originY =
@@ -172,22 +171,24 @@ class Orb {
     this.graphics.endFill();
   }
 }
-const simplex = new SimplexNoise();
+
 // Create PixiJS app
-const app = new PIXI.Application({
-  // render to <canvas class="orb-canvas"></canvas>
-  view: document.querySelector('.orb-canvas'),
-  // auto adjust size to fit the current window
-  resizeTo: window,
-  // transparent background, we will be creating a gradient background later using CSS
-  backgroundAlpha: 20,
-});
+
 // Create colour palette
 const colorPalette = new ColorPalette();
 
 const orbs = [];
 
-export const Animate = () => {
+export const Animate = (canvas) => {
+  const app = new PIXI.Application({
+    // render to <canvas class="orb-canvas"></canvas>
+    view: canvas.current,
+    // auto adjust size to fit the current window
+    resizeTo: window,
+    // transparent background, we will be creating a gradient background later using CSS
+    backgroundAlpha: 11,
+  });
+  console.log(document.querySelector('.orb-canvas'));
   app.stage.filters = [new KawaseBlurFilter(30, 10, true)];
 
   // Create orbs
@@ -200,19 +201,12 @@ export const Animate = () => {
   }
 
   // Animate!
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    app.ticker.add(() => {
-      orbs.forEach((orb) => {
-        orb.update();
-        orb.render();
-      });
-    });
-  } else {
+  app.ticker.add(() => {
     orbs.forEach((orb) => {
       orb.update();
       orb.render();
     });
-  }
+  });
 };
 
 export const Random = () => {

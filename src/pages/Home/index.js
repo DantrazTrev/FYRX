@@ -1,12 +1,10 @@
 import React from 'react';
 import './index.css';
-import { Random } from '../../utils/animation';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
     <>
-      <canvas class='orb-canvas'></canvas>{' '}
       <img className='Ill' src={require('../../3D.png')} />
       <div class='overlay'>
         <div class='overlay__inner'>
