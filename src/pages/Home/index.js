@@ -16,34 +16,24 @@ const Home = () => {
             <span class='text-gradient'> videos</span>
           </h1>
           <p class='overlay__description'>
-            Get more analytical data for your videos,Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillu.<br></br>
-            <strong>Plus it's all free</strong>
+            Using the advanced AI engines to analyse user watch time and
+            reactions dive greater into the what drives your creative career{' '}
+            <br></br>
+            <strong>Coming Soon</strong>
           </p>
-          <div class='overlay__btns'>
+          {/* <div class='overlay__btns'>
             <button class='overlay__btn overlay__btn--transparent'>
-              <a
-                href='https://georgefrancis.dev/writing/create-a-generative-landing-page-and-webgl-powered-background/'
-                target='_blank'
-              >
-                View Tutorial
-              </a>
+              <a target='_blank'>View Tutorial</a>
             </button>
 
             <button class='overlay__btn overlay__btn--colors'>
               {' '}
-              <Link style={{ color: 'white', padding: '20px' }} to='/app'>
-                <span>
-                  Get Started
-                  <span class='overlay__btn-emoji'>🦆</span>
-                </span>
-              </Link>{' '}
+              <span>
+                Coming Soon
+                <span class='overlay__btn-emoji'>🦆</span>
+              </span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

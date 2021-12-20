@@ -11,7 +11,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='app' element={<Cam />} />
         </Routes>
       </BrowserRouter>
     </>
