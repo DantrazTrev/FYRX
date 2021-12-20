@@ -169,7 +169,6 @@ a {
 @media only screen and (max-width: 1140px) {
   .overlay {
     padding: 8rem 4rem;
-    
   }
 }
 
@@ -180,7 +179,7 @@ a {
 
   .overlay {
     padding: 4rem;
-    
+    height: auto;
   }
 
   .overlay__title {
@@ -318,18 +317,6 @@ h1 {
     grid-column: 1/-1;
     grid-row-end: span 2;
   }
-  .logo {
-    top: 0;
-    width: 250px;
-    right: -20px;
-}
-  .Ill {
-    left: -25px;
-    top: 0;
-    z-index: 99;
-    width: 62%;
-}
-  
 }
 .item__details {
   position: relative;
