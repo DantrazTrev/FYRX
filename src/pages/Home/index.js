@@ -1,7 +1,5 @@
 import React from 'react';
 import './index.css';
-import { Random } from '../../utils/animation';
-import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
