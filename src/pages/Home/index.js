@@ -5,10 +5,10 @@ const Home = () => {
   return (
     <>
       <canvas class='orb-canvas'></canvas>{' '}
-      <img className='Ill' src={require('../../3D.png')} />
+      <img className='Ill' src={require('../../3D.png')} alt='Illustration' />
       <div class='overlay'>
         <div class='overlay__inner'>
-          <img className='logo' src={require('../../logo.png')} />
+          <img className='logo' src={require('../../logo.png')} alt='Logo' />
           <h1 class='overlay__title'>
             Get more insights on your
             <span class='text-gradient'> videos</span>
