@@ -10,6 +10,7 @@ const Home = () => {
         src={require('../../3D.png')}
         loading='eager'
         alt='Illustration'
+        rel='preload'
       />
       <div class='overlay'>
         <div class='overlay__inner'>
@@ -18,6 +19,7 @@ const Home = () => {
             src={require('../../logo.png')}
             loading='eager'
             alt='Logo'
+            rel='preload'
           />
           <h1 class='overlay__title'>
             Get more insights on your
