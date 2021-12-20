@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Home from './pages/Home';
 import { Animate } from './utils/animation';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Library from './pages/library';
+import Cam from './pages/Cam';
 function App() {
   Animate();
   return (
@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='app' element={<Library />} />
+          <Route path='app' element={<Cam />} />
         </Routes>
       </BrowserRouter>
     </>
