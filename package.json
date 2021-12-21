@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "debounce": "^1.2.1",
     "face-api.js": "^0.22.2",
+    "firebase": "^9.6.1",
     "history": "^5.2.0",
     "hsl-to-hex": "^1.0.0",
     "pixi.js": "^6.2.0",
