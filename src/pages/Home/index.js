@@ -27,6 +27,7 @@ const Home = ({Anim}) => {
           <div class='overlay__btns'>
             <button class='overlay__btn overlay__btn--transparent'>
               <a
+              href='www.dantraz.codes'
                 target='_blank'
               >
                 View Tutorial
