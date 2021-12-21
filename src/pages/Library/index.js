@@ -4,9 +4,8 @@ import Sidebar from '../../components/Sidebar'
 import LoginModal from '../../components/LoginModal'
 import Cards from '../../components/Cards'
 
-import {useAuth} from '../../context/AuthCon'
 function Library() {
-    const {logout} = useAuth()
+   
   const [loginModal,setModal] = useState(false)
   const [currTab,setTab]=useState('ex')
   return (

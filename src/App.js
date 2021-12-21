@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect, useRef,useState } from 'react';
 import Home from './pages/Home';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {AuthProvider} from './context/AuthCon'
 import { Animate } from './utils/animation';
 import Cam from './pages/Cam';

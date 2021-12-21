@@ -8,19 +8,19 @@ const Cards= ({currTab})=> {
     return (
         
        <>
-       { currTab=="ex" &&(
+       { currTab==="ex" &&(
         <div className="Cards">
         {data.map((item)=>{
             return(<Card item={item}/>)
         })}
 
         </div>)}
-           { currTab=="em" &&(
+           { currTab==="em" &&(
         <div className="Cards">
        <Emotions/>
 
         </div>)}
-        { currTab=="up" &&(
+        { currTab==="up" &&(
         <div className="Cards">
        <Upload/>
 

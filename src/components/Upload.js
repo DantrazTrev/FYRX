@@ -5,7 +5,7 @@ function Upload() {
     return (<>
          
             <div className='card' onClick={()=>{Nav('/app') }} >
-            <img className='ico'  src={require('../add.png')}/>
+            <img className='ico' alt='ico' src={require('../add.png')}/>
         </div>
         
             </>

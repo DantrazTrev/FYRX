@@ -1,4 +1,4 @@
-import React ,{useEffect}from 'react';
+import React from 'react';
 import './Home/index.css';
 import { Link } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ const Lost = () => {
 
   return (
     <>
-      <img className='Ill' src={require('../404.png')} />
+      <img alt='Ill' className='Ill' src={require('../404.png')} />
      
         <div class='overlay__inner' style={{position:'absolute',right:'10%',top:'30%'}}>
           <h1 class='overlay__title' style={{color:'white',fontSize:'4rem'}}>

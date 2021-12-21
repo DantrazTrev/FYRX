@@ -1,4 +1,4 @@
-import React ,{useEffect}from 'react';
+import React from 'react';
 import './index.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,10 +7,10 @@ const Home = ({Anim}) => {
 
   return (
     <>
-      <img className='Ill' src={require('../../3D.png')} />
+      <img alt='txt' className='Ill' src={require('../../3D.png')} />
       <div class='overlay'>
         <div class='overlay__inner'>
-          <img className='logo' src={require('../../logo.png')} />
+          <img alt='txt' className='logo' src={require('../../logo.png')} />
           <h1 class='overlay__title'>
             Get more insights on your
             <span class='text-gradient'> videos</span>
