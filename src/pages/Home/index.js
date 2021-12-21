@@ -1,8 +1,10 @@
-import React from 'react';
+import React ,{useEffect}from 'react';
 import './index.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const Home = ({Anim}) => {
+  const Nav = useNavigate()
+
   return (
     <>
       <img className='Ill' src={require('../../3D.png')} />
@@ -25,21 +27,20 @@ const Home = () => {
           <div class='overlay__btns'>
             <button class='overlay__btn overlay__btn--transparent'>
               <a
-                href='https://georgefrancis.dev/writing/create-a-generative-landing-page-and-webgl-powered-background/'
                 target='_blank'
               >
                 View Tutorial
               </a>
             </button>
 
-            <button class='overlay__btn overlay__btn--colors'>
+            <button class='overlay__btn overlay__btn--colors' onClick={()=>{Nav('app') }}>
               {' '}
-              <Link style={{ color: 'white', padding: '20px' }} to='/app'>
+            
                 <span>
                   Get Started
                   <span class='overlay__btn-emoji'>🦆</span>
                 </span>
-              </Link>{' '}
+            
             </button>
           </div>
         </div>
