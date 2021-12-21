@@ -37,7 +37,7 @@ body {
   overflow: none;
   padding: 2rem;
   font-family: var(--font-family);
-  color: var(--dark-color);
+  color: var(--light-color);
   background: var(--bg-gradient);
 }
 

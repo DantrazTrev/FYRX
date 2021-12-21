@@ -71,7 +71,7 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
 
   return (
     <>
-      <div className='overlay'></div>
+      <div className='overlay-cam'></div>
       <div className='mockup'>
         <div id='browser ' className='browser'>
           <video

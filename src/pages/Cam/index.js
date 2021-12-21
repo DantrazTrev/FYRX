@@ -132,10 +132,10 @@ function Cam() {
         </div>
         {!start ? (
           <div
-            style={{ display: 'flex', width: '100%', flexDirection: 'column' }}
+            style={{ display: 'flex', width: '100%', flexDirection: 'column',alignItems: 'center', }}
           >
-            <label for='file'>Choose Video</label>
-            <label for='file'>Use Link</label>
+            <label for='file' style={{backgroundColor:'rgb(30 30 30 / 56%)' ,color:'rgb(255 255 255 / 78%)'}}className='overlay__btn'>Choose Video</label>
+            <label for='file'style={{backgroundColor:'rgb(30 30 30 / 56%)' ,color:'rgb(255 255 255 / 78%)'}}className='overlay__btn'>Use Link</label>
           </div>
         ) : (
           <div className='text'>{detection}</div>

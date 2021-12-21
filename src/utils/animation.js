@@ -186,7 +186,7 @@ export const Animate = (canvas) => {
     // auto adjust size to fit the current window
     resizeTo: window,
     // transparent background, we will be creating a gradient background later using CSS
-    backgroundAlpha: 11,
+    backgroundAlpha: 200,
   });
   console.log(document.querySelector('.orb-canvas'));
   app.stage.filters = [new KawaseBlurFilter(30, 10, true)];

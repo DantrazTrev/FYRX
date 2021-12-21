@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Animate } from './utils/animation';
 import Cam from './pages/Cam';
 import Lost from './pages/Lost';
+
+import Library from './pages/Library';
 function App() {
   const [Anim,setAnim]= useState()
   const canvasRef = useRef();
@@ -19,6 +21,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home Anim={Anim}/>} />
           <Route path='app' element={<Cam />} />
+           <Route path='dashboard' element={<Library />} />
           <Route path='*' element={<Lost />}/>
          
         </Routes>

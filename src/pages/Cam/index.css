@@ -3,15 +3,12 @@ body {
   -moz-user-select: none;
 }
 
-.overlay-cam {
+.b-cam {
   position: absolute;
-  width: 80%;
-  height: 80%;
-  opacity: 0.3;
-  top: 0;
-  left: 0;
+  display:'block';
+  
+  opacity: 0.8;
   background: rgba(255, 255, 255, 0.555);
-  box-shadow: 0 0.75rem 2rem 0 rgb(0 0 0 / 10%);
   border-radius: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.125);
 }
@@ -95,7 +92,7 @@ body {
 #preview {
   left: 50%;
   top: 50%;
-  position: relative;
+  position: absolute;
 
   padding: 8rem 6rem;
   transform: translate3d(-50%, -50%, 0);
@@ -125,7 +122,9 @@ body {
   width: 906px;
   height: 501px;
   margin: 0 auto;
-  border: 1px solid rgb(0, 0, 0);
+  border:1px solid rgb(255 255 255 / 38%);
+  background-color:rgb(30 30 30 / 56%);
+  border-radius:30px;
 }
 #preview #thumb-cont img {
   max-width: 100%;
@@ -174,3 +173,4 @@ body {
   color: rgb(0, 0, 0);
   border-right: 1px solid rgba(255, 255, 255, 0.6);
 }
+
