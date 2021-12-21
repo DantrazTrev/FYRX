@@ -33,7 +33,7 @@ const Home = ({Anim}) => {
               </a>
             </button>
 
-            <button class='overlay__btn overlay__btn--colors' onClick={()=>{Nav('app') }}>
+            <button class='overlay__btn overlay__btn--colors' onClick={()=>{Nav('dashboard') }}>
               {' '}
             
                 <span>
