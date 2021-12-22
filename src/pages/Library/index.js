@@ -3,9 +3,13 @@ import './index.css';
 import Sidebar from '../../components/Sidebar';
 import LoginModal from '../../components/LoginModal';
 import Cards from '../../components/Cards';
-import { useAuth } from '../../context/AuthCon';
+import { useSelector, useDispatch } from 'react-redux';
+import { useFirebase, useFirestore } from 'react-redux-firebase';
 function Library() {
-  const { currentUser, logout } = useAuth();
+  const firebase = useFirebase();
+
+  const { uid, email } = useSelector((state) => state.firebase.auth);
+  const logout = () => {};
   const [loginModal, setModal] = useState(false);
   const [currTab, setTab] = useState('ex');
   return (
@@ -15,11 +19,11 @@ function Library() {
         <div
           className='login'
           onClick={() => {
-            if (currentUser) logout();
+            if (uid) firebase.logout();
             else setModal(!loginModal);
           }}
         >
-          {currentUser !== null ? 'Log Out' : 'Log In / Sign up'}
+          {uid ? 'Log Out' : 'Log In / Sign up'}
         </div>
       </nav>
 
