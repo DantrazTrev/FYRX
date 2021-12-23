@@ -1,19 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import { Link, useLocation } from 'react-router-dom';
 import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
-
-function Video({}) {
+import Charts from '../../components/Charts';
+function Video() {
   const location = useLocation();
   const firestore = useFirestore();
+  const player = useRef();
+  const [progress, setProgress] = useState({
+    played: 0,
+    playedSeconds: 0,
+    loaded: 0,
+    loadedSeconds: 0,
+  });
   const [vidId, setVidId] = useState(
     queryString.parse(location.search, {
       parseNumbers: true,
       parseBooleans: true,
     }).id
   );
-  const [src, setSrc] = useState('');
+  const [playing, setPlaying] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [vdata, setVdata] = useState({});
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     firestore
@@ -21,19 +30,65 @@ function Video({}) {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          setSrc(doc.data().src);
+          setVdata(doc.data());
           setLoading(false);
         }
       });
   }, [vidId]);
+  const handlePlayPause = () => {
+    setPlaying(!playing);
+  };
 
-  if (loading === true) {
+  const handleProgress = (state) => {
+    setProgress(state);
+  };
+  if (loading === true && ready == true) {
     return <div></div>;
   }
+
   return (
-    <div className='videoPlayer'>
-      <ReactPlayer url={src} controls={true} />
-    </div>
+    <>
+      <div className='videoPlayer'>
+        <ReactPlayer
+          config={{
+            youtube: {
+              playerVars: {
+                autoplay: 1,
+                iv_load_policy: 3,
+                modestbranding: 1,
+                playsinline: 1,
+                rel: 0,
+                showinfo: 0,
+                disablekb: 0,
+              },
+            },
+          }}
+          light={false}
+          ref={player}
+          url={vdata.src}
+          controls={false}
+          playing={playing}
+          onReady={() => {
+            setReady(true);
+          }}
+          onProgress={handleProgress}
+        />
+        <div class='progress' ref={progress}>
+          <div
+            class='progress-filled'
+            style={{
+              width: `${progress.played * 100}%`,
+            }}
+          ></div>
+        </div>
+        <br />
+        <button onClick={handlePlayPause}>{playing ? 'Pause' : 'Play'}</button>
+        <h2>{vdata.name}</h2>
+      </div>
+      <div className='charts'>
+        <Charts />
+      </div>
+    </>
   );
 }
 

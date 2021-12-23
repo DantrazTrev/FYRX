@@ -5,8 +5,8 @@ body {
 
 .b-cam {
   position: absolute;
-  display:'block';
-  
+  display: 'block';
+
   opacity: 0.8;
   background: rgba(255, 255, 255, 0.555);
   border-radius: 2rem;
@@ -63,11 +63,11 @@ body {
 
 .progress {
   height: 8px;
-  width: calc(100% - 40px);
-  background: rgba(60, 60, 60, 0.6);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.6);
   margin: auto;
   position: absolute;
-  left: 20px;
+  left: 0px;
   margin-top: 10px;
   transition: height 0.1s ease-in-out;
 }
@@ -75,7 +75,7 @@ body {
   height: 10px;
 }
 .progress-filled {
-  background: rgb(0, 0, 0);
+  background: rgb(79, 79, 79);
   width: 0%;
   height: 100%;
   transition: all 0.1s;
@@ -122,9 +122,9 @@ body {
   width: 906px;
   height: 501px;
   margin: 0 auto;
-  border:1px solid rgb(255 255 255 / 38%);
-  background-color:rgb(30 30 30 / 56%);
-  border-radius:30px;
+  border: 1px solid rgb(255 255 255 / 38%);
+  background-color: rgb(30 30 30 / 56%);
+  border-radius: 30px;
 }
 #preview #thumb-cont img {
   max-width: 100%;
@@ -173,4 +173,3 @@ body {
   color: rgb(0, 0, 0);
   border-right: 1px solid rgba(255, 255, 255, 0.6);
 }
-

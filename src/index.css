@@ -17,3 +17,8 @@ code {
   left: 10%;
   /* width: 500px; */
 }
+.charts {
+  right: 5%;
+  position: absolute;
+  top: 10%;
+}
