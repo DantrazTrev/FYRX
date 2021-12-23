@@ -6,28 +6,45 @@ import { useFirebase, useFirestore } from 'react-redux-firebase';
 const LoginModal = ({ handleClose }) => {
   const firebase = useFirebase();
   const [option, setOption] = useState(1);
+  const [err, seterr] = useState(null);
   const emailRef = useRef();
   const password = useRef();
   const rep_password = useRef();
   const handleSubmit = async () => {
+    seterr(null);
     if (option === 1) {
       {
-        await firebase.login({
-          email: emailRef.current.value,
-          password: password.current.value,
-        });
+        await firebase
+          .login({
+            email: emailRef.current.value,
+            password: password.current.value,
+          })
+          .then(() => {
+            handleClose();
+          })
+          .catch((error) => {
+            seterr(error.message);
+            // ..
+          });
       }
     } else {
       if (password.current.value === rep_password.current.value) {
-        await firebase.createUser({
-          email: emailRef.current.value,
-          password: password.current.value,
-          username: '',
-        });
+        await firebase
+          .createUser({
+            email: emailRef.current.value,
+            password: password.current.value,
+            username: '',
+          })
+          .then(() => {
+            handleClose();
+          })
+          .catch((error) => {
+            seterr(error.message);
+            // ..
+          });
       } else
         console.log('err', password.current.value, rep_password.current.value);
     }
-    handleClose();
   };
 
   return (
@@ -89,7 +106,7 @@ const LoginModal = ({ handleClose }) => {
                   disabled={option === 1 ? true : false}
                 />
               </div>
-
+              <span style={{ color: 'red' }}>{err}</span>
               <div>
                 {option === 1 && (
                   <div>

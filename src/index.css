@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.videoPlayer {
+  top: 10%;
+  position: absolute;
+  left: 10%;
+  /* width: 500px; */
+}

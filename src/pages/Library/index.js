@@ -9,7 +9,7 @@ function Library() {
   const firebase = useFirebase();
 
   const { uid, email } = useSelector((state) => state.firebase.auth);
-  const logout = () => {};
+
   const [loginModal, setModal] = useState(false);
   const [currTab, setTab] = useState('ex');
   return (

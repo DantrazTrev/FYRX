@@ -9,6 +9,7 @@ import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { Provider } from 'react-redux';
 import store, { rrfProps } from './redux/store';
 import Library from './pages/Library';
+import Video from './pages/Video';
 function App() {
   const [Anim, setAnim] = useState();
   const canvasRef = useRef();
@@ -26,6 +27,7 @@ function App() {
               <Route path='/' element={<Home Anim={Anim} />} />
               <Route path='app' element={<Cam />} />
               <Route path='dashboard' element={<Library />} />
+              <Route path='video' element={<Video />} />
               <Route path='*' element={<Lost />} />
             </Routes>
           </BrowserRouter>
