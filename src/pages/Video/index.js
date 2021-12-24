@@ -32,9 +32,14 @@ function Video() {
         if (doc.exists) {
           setVdata(doc.data());
           setLoading(false);
+        } else {
         }
       });
   }, [vidId]);
+
+  useEffect(() => {
+    setPlaying(false);
+  }, [ready]);
   const handlePlayPause = () => {
     setPlaying(!playing);
   };
@@ -50,10 +55,11 @@ function Video() {
     <>
       <div className='videoPlayer'>
         <ReactPlayer
+          className='react-player'
           config={{
             youtube: {
               playerVars: {
-                autoplay: 1,
+                autoplay: 0,
                 iv_load_policy: 3,
                 modestbranding: 1,
                 playsinline: 1,
@@ -81,8 +87,24 @@ function Video() {
             }}
           ></div>
         </div>
-        <br />
-        <button onClick={handlePlayPause}>{playing ? 'Pause' : 'Play'}</button>
+
+        <div className='controls'>
+          {playing ? (
+            <img
+              onClick={() => setPlaying(false)}
+              className='controlsIcon--small'
+              alt=''
+              src='/pause.svg'
+            />
+          ) : (
+            <img
+              onClick={() => setPlaying(true)}
+              className='controlsIcon--small'
+              alt=''
+              src='/play.svg'
+            />
+          )}
+        </div>
         <h2>{vdata.name}</h2>
       </div>
       <div className='charts'>

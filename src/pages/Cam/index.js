@@ -61,7 +61,7 @@ function Cam() {
           setdetection(toHHMMSS(player.current.currentTime) + ' ' + status);
           const time = toHHMMSS(player.current.currentTime);
           let new_json = Json;
-          new_json[time] = status;
+          new_json[player.current.currentTime] = status;
           setJson(new_json);
           // const marker = document.createElement('div');
 
@@ -104,6 +104,7 @@ function Cam() {
                 ref={player}
                 height={501}
                 width={906}
+                style={{ borderRadius: '20px', objectFit: 'cover' }}
                 onPlay={() => {
                   setPlay(true);
                 }}
@@ -132,10 +133,33 @@ function Cam() {
         </div>
         {!start ? (
           <div
-            style={{ display: 'flex', width: '100%', flexDirection: 'column',alignItems: 'center', }}
+            style={{
+              display: 'flex',
+              width: '100%',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
           >
-            <label for='file' style={{backgroundColor:'rgb(30 30 30 / 56%)' ,color:'rgb(255 255 255 / 78%)'}}className='overlay__btn'>Choose Video</label>
-            <label for='file'style={{backgroundColor:'rgb(30 30 30 / 56%)' ,color:'rgb(255 255 255 / 78%)'}}className='overlay__btn'>Use Link</label>
+            <label
+              for='file'
+              style={{
+                backgroundColor: 'rgb(30 30 30 / 56%)',
+                color: 'rgb(255 255 255 / 78%)',
+              }}
+              className='overlay__btn'
+            >
+              Choose Video
+            </label>
+            <label
+              for='file'
+              style={{
+                backgroundColor: 'rgb(30 30 30 / 56%)',
+                color: 'rgb(255 255 255 / 78%)',
+              }}
+              className='overlay__btn'
+            >
+              Use Link
+            </label>
           </div>
         ) : (
           <div className='text'>{detection}</div>

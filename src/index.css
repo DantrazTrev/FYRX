@@ -11,14 +11,89 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.react-player {
+  border-radius: 2rem;
+}
 .videoPlayer {
-  top: 10%;
+  top: 5%;
   position: absolute;
-  left: 10%;
+  left: 5%;
+  padding: 2rem;
   /* width: 500px; */
+  background-color: rgb(30 30 30 / 56%);
+  box-shadow: 0 0.75rem 2rem 0 rgb(0 0 0 / 10%);
+  border-radius: 2rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.videoPlayer .progress {
+  height: 8px;
+  width: calc(100%);
+  background: rgba(255, 255, 255, 0.6);
+  margin: auto;
+  position: relative;
+  margin-left: -20px;
+  margin-top: 30px;
+  transition: height 0.1s ease-in-out;
 }
 .charts {
-  right: 5%;
+  right: 2%;
   position: absolute;
-  top: 10%;
+  top: 5%;
+  padding: 2rem;
+  background-color: rgb(30 30 30 / 56%);
+  box-shadow: 0 0.75rem 2rem 0 rgb(0 0 0 / 10%);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding-top: 20px;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.controlsIcon--small {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  margin-left: 10rem;
+  margin-right: 10rem;
+}
+
+/* The time controls section */
+
+.timecontrols {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  position: absolute;
+  bottom: 4rem;
+  margin-left: 10vw;
+}
+
+.time_progressbarContainer {
+  background-color: gray;
+  border-radius: 15px;
+  width: 75vw;
+  height: 5px;
+  z-index: 30;
+  position: relative;
+  margin: 0 20px;
+}
+
+.time_progressBar {
+  border-radius: 15px;
+  background-color: indigo;
+  height: 100%;
+}
+
+.controlsTime {
+  color: white;
 }

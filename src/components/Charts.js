@@ -1,8 +1,9 @@
 import React from 'react';
-import { scaleOrdinal } from '@visx/scale';
-import Pie, { ProvidedProps, PieArcDatum } from '@visx/shape/lib/shapes/Pie';
+import Pie from '@visx/shape/lib/shapes/Pie';
 import { Group } from '@visx/group';
 import { animated, useTransition, interpolate } from 'react-spring';
+
+import { withTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
 
 const data = [{ happy: 33 }, { sad: 10 }, { angry: 20 }, { surprised: 43 }];
 const dataz = data.map((datum) => ({
@@ -11,10 +12,17 @@ const dataz = data.map((datum) => ({
 }));
 
 const colors = {
-  happy: 'rgba(255,215,0,0.7)',
-  sad: 'rgba(0,0,139,0.7)',
-  angry: 'rgba(128,0,0,0.8)',
-  surprised: 'rgba(128,0,128,0.7)',
+  happy: 'rgba(210,185,0)',
+  sad: 'rgba(0,0,139)',
+  angry: 'rgba(128,0,0)',
+  surprised: 'rgba(128,0,128)',
+};
+
+const tooltipStyles = {
+  ...defaultStyles,
+  minWidth: 60,
+  backgroundColor: 'rrgb(30 30 30 / 0.56)',
+  color: 'white',
 };
 
 const getColor = (label) => {
@@ -23,7 +31,7 @@ const getColor = (label) => {
 
 function Charts() {
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-
+  const samples = 2;
   const centerY = 150;
   const centerX = 150;
 
@@ -53,7 +61,17 @@ function Charts() {
           </Pie>
         </Group>
       </svg>
-      <h3 style={{ textAlign: 'center' }}>Data Samples:2</h3>
+      <h3 style={{ textAlign: 'center' }}>Data Samples:{samples}</h3>
+      {samples < 5 && (
+        <>
+          <br />
+          <h3 style={{ textAlign: 'center', color: 'red' }}>
+            ⚠ Low Data samples
+            <br />
+            (This data isn't reliable)
+          </h3>
+        </>
+      )}
     </>
   );
 }
@@ -104,7 +122,7 @@ function AnimatedPie({ animate, arcs, path, getKey, getColor }) {
               x={centroidX}
               y={centroidY}
               dy='.33em'
-              fontSize={9}
+              fontSize={13}
               textAnchor='middle'
               pointerEvents='none'
             >

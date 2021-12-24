@@ -5,11 +5,24 @@ import { useFirebase, useFirestore } from 'react-redux-firebase';
 
 const LoginModal = ({ handleClose }) => {
   const firebase = useFirebase();
+  const firestore = useFirestore();
   const [option, setOption] = useState(1);
   const [err, seterr] = useState(null);
   const emailRef = useRef();
   const password = useRef();
   const rep_password = useRef();
+
+  const signup = async (e) => {
+    await firestore
+      .collection('users')
+      .doc(e.user.uid)
+      .set({
+        displayName: e.user.displayName || '',
+        email: e.user.email,
+        uid: e.user.uid,
+      });
+  };
+
   const handleSubmit = async () => {
     seterr(null);
     if (option === 1) {
@@ -19,7 +32,7 @@ const LoginModal = ({ handleClose }) => {
             email: emailRef.current.value,
             password: password.current.value,
           })
-          .then(() => {
+          .then((e) => {
             handleClose();
           })
           .catch((error) => {
@@ -35,7 +48,8 @@ const LoginModal = ({ handleClose }) => {
             password: password.current.value,
             username: '',
           })
-          .then(() => {
+          .then(async (e) => {
+            await signup(e);
             handleClose();
           })
           .catch((error) => {
@@ -46,7 +60,23 @@ const LoginModal = ({ handleClose }) => {
         console.log('err', password.current.value, rep_password.current.value);
     }
   };
-
+  const google_signin = async () => {
+    await firebase
+      .login({
+        provider: 'google',
+        type: 'popup',
+      })
+      .then((e) => {
+        if (option === 1) {
+          signup(e);
+        }
+        handleClose(e);
+      })
+      .catch((error) => {
+        seterr(error.message);
+        // ..
+      });
+  };
   return (
     <>
       <div className='backdrop' onClick={handleClose}></div>
@@ -145,7 +175,7 @@ const LoginModal = ({ handleClose }) => {
               <button
                 className='overlay__btn'
                 style={{ backgroundColor: 'rgb(63 84 185 / 56%)' }}
-                type='submit'
+                onClick={google_signin}
               >
                 <img
                   style={{ width: '20px', height: '20px', marginRight: '10px' }}
