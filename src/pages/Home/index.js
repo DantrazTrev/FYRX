@@ -2,15 +2,19 @@ import React from 'react';
 import './index.css';
 import { useNavigate } from 'react-router-dom';
 
-const Home = ({Anim}) => {
-  const Nav = useNavigate()
+const Home = ({ Anim }) => {
+  const Nav = useNavigate();
 
   return (
     <>
-      <img alt='txt' className='Ill' src={require('../../3D.png')} />
+      <img alt='txt' className='Ill' src={require('../../assets/3D.png')} />
       <div class='overlay'>
         <div class='overlay__inner'>
-          <img alt='txt' className='logo' src={require('../../logo.png')} />
+          <img
+            alt='txt'
+            className='logo'
+            src={require('../../assets/logo.png')}
+          />
           <h1 class='overlay__title'>
             Get more insights on your
             <span class='text-gradient'> videos</span>
@@ -26,22 +30,22 @@ const Home = ({Anim}) => {
           </p>
           <div class='overlay__btns'>
             <button class='overlay__btn overlay__btn--transparent'>
-              <a
-              href='www.dantraz.codes'
-                target='_blank'
-              >
+              <a href='www.dantraz.codes' target='_blank'>
                 View Tutorial
               </a>
             </button>
 
-            <button class='overlay__btn overlay__btn--colors' onClick={()=>{Nav('dashboard') }}>
+            <button
+              class='overlay__btn overlay__btn--colors'
+              onClick={() => {
+                Nav('dashboard');
+              }}
+            >
               {' '}
-            
-                <span>
-                  Get Started
-                  <span class='overlay__btn-emoji'>🦆</span>
-                </span>
-            
+              <span>
+                Get Started
+                <span class='overlay__btn-emoji'>🦆</span>
+              </span>
             </button>
           </div>
         </div>

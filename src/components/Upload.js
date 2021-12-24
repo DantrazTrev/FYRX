@@ -1,15 +1,19 @@
-import React from 'react'
-import {useNavigate} from 'react-router-dom'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 function Upload() {
-    const Nav = useNavigate()
-    return (<>
-         
-            <div className='card' onClick={()=>{Nav('/app') }} >
-            <img className='ico' alt='ico' src={require('../add.png')}/>
-        </div>
-        
-            </>
-    )
+  const Nav = useNavigate();
+  return (
+    <>
+      <div
+        className='card'
+        onClick={() => {
+          Nav('/app');
+        }}
+      >
+        <img className='ico' alt='ico' src={require('../assets/add.png')} />
+      </div>
+    </>
+  );
 }
 
-export default Upload
+export default Upload;

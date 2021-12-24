@@ -1,6 +1,8 @@
 import * as faceapi from 'face-api.js';
 import { useState, useRef } from 'react';
+import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Camera from '../../components/camera';
+import UploadModal from '../../components/UploadModal';
 import './index.css';
 
 function Cam() {
@@ -8,13 +10,15 @@ function Cam() {
   const videoref = useRef();
   const player = useRef();
   const progress = useRef();
-
+  const firestore = useFirestore();
+  const firebase = useFirebase();
   const [start, setStart] = useState(false);
   const [play, setPlay] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
   const [detection, setdetection] = useState('');
   const [Json, setJson] = useState({});
   const [onFinish, setFinish] = useState(false);
+  const [modal, setModal] = useState(true);
   var toHHMMSS = (secs) => {
     var sec_num = parseInt(secs, 10);
     var hours = Math.floor(sec_num / 3600);
@@ -38,6 +42,12 @@ function Cam() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const uploadVideo = async () => {
+    const fileName = 'metdata';
+    const json = JSON.stringify(Json);
+    const blob = new Blob([json], { type: 'application/json' });
   };
 
   const handleVideoPlay = () => {
@@ -95,108 +105,121 @@ function Cam() {
   //   );
   // };
   return (
-    <div className='overlay-cam'>
-      <div id='preview'>
-        <div id='thumb-cont'>
-          {selectedFile && (
-            <>
-              <video
-                ref={player}
-                height={501}
-                width={906}
-                style={{ borderRadius: '20px', objectFit: 'cover' }}
-                onPlay={() => {
-                  setPlay(true);
-                }}
-                onEnded={() => setFinish(true)}
-              >
-                <source src={selectedFile} id='video' type='video/mp4' />
-              </video>
-              <div class='progress' ref={progress}>
-                <div
-                  class='progress-filled'
-                  style={
-                    play
-                      ? {
-                          width: `${
-                            (player.current.currentTime /
-                              player.current.duration) *
-                            100
-                          }%`,
-                        }
-                      : {}
-                  }
-                ></div>
-              </div>
-            </>
-          )}
-        </div>
-        {!start ? (
-          <div
-            style={{
-              display: 'flex',
-              width: '100%',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <label
-              for='file'
-              style={{
-                backgroundColor: 'rgb(30 30 30 / 56%)',
-                color: 'rgb(255 255 255 / 78%)',
-              }}
-              className='overlay__btn'
-            >
-              Choose Video
-            </label>
-            <label
-              for='file'
-              style={{
-                backgroundColor: 'rgb(30 30 30 / 56%)',
-                color: 'rgb(255 255 255 / 78%)',
-              }}
-              className='overlay__btn'
-            >
-              Use Link
-            </label>
+    <>
+      <div className='overlay-cam'>
+        <div id='preview'>
+          <div id='thumb-cont'>
+            {selectedFile && (
+              <>
+                <video
+                  ref={player}
+                  height={501}
+                  width={906}
+                  style={{ borderRadius: '20px', objectFit: 'cover' }}
+                  onPlay={() => {
+                    setPlay(true);
+                  }}
+                  onEnded={() => setFinish(true)}
+                >
+                  <source src={selectedFile} id='video' type='video/mp4' />
+                </video>
+                <div class='progress' ref={progress}>
+                  <div
+                    class='progress-filled'
+                    style={
+                      play
+                        ? {
+                            width: `${
+                              (player.current.currentTime /
+                                player.current.duration) *
+                              100
+                            }%`,
+                          }
+                        : {}
+                    }
+                  ></div>
+                </div>
+              </>
+            )}
           </div>
+          {!start ? (
+            <div
+              style={{
+                display: 'flex',
+                width: '100%',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <label
+                for='file'
+                style={{
+                  backgroundColor: 'rgb(30 30 30 / 56%)',
+                  color: 'rgb(255 255 255 / 78%)',
+                }}
+                className='overlay__btn'
+              >
+                Choose Video
+              </label>
+              <label
+                for='file'
+                style={{
+                  backgroundColor: 'rgb(30 30 30 / 56%)',
+                  color: 'rgb(255 255 255 / 78%)',
+                }}
+                className='overlay__btn'
+              >
+                Use Link
+              </label>
+            </div>
+          ) : (
+            <div className='text'>{detection}</div>
+          )}
+          {onFinish && (
+            <label className='overlay__btn' for='download'>
+              Upload Video
+            </label>
+          )}
+          <button
+            style={{ display: 'none' }}
+            className='overlay__btn'
+            id='download'
+            onClick={() => {
+              downloadFile();
+            }}
+          />
+          <input
+            type='file'
+            id='file'
+            style={{ display: 'none' }}
+            onChange={changeHandler}
+            accept='video/mp4'
+          />
+        </div>
+
+        {start ? (
+          <>
+            <Camera
+              handleVideoPlay={handleVideoPlay}
+              videoref={videoref}
+              setintilaizing={setintilaizing}
+            />
+            <p className='note'>
+              You are not being recorded, it all happens in your own browser!
+            </p>
+          </>
         ) : (
-          <div className='text'>{detection}</div>
+          ''
         )}
-        {onFinish && <label for='download'>Download Metdata</label>}
-        <button
-          style={{ display: 'none' }}
-          className='overlay__btn overlay__btn--colors'
-          id='download'
-          onClick={() => {
-            downloadFile();
+      </div>
+      {modal && (
+        <UploadModal
+          handleClose={() => {
+            setModal(false);
           }}
         />
-        <input
-          type='file'
-          id='file'
-          style={{ display: 'none' }}
-          onChange={changeHandler}
-          accept='video/mp4'
-        />
-      </div>
-
-      {start ? (
-        <>
-          <Camera
-            handleVideoPlay={handleVideoPlay}
-            videoref={videoref}
-            setintilaizing={setintilaizing}
-          />
-          <p className='note'>
-            You are not being recorded, it all happens in your own browser!
-          </p>
-        </>
-      ) : (
-        ''
       )}
-    </div>
+    </>
   );
 }
 
