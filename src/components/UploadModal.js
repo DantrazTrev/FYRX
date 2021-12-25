@@ -3,14 +3,14 @@ import '../modal.css';
 
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 
-const UploadModal = ({ handleClose }) => {
-  const firebase = useFirebase();
-  const firestore = useFirestore();
-  const [option, setOption] = useState(1);
+const UploadModal = ({ handleClose, Uploadfile }) => {
   const [err, seterr] = useState(null);
-  const emailRef = useRef();
-  const password = useRef();
-  const rep_password = useRef();
+  const [priv, setPrivate] = useState(false);
+  const nameRef = useRef();
+
+  const upload = () => {
+    Uploadfile(priv, nameRef.current.value);
+  };
 
   return (
     <>
@@ -43,12 +43,7 @@ const UploadModal = ({ handleClose }) => {
                 evt.preventDefault();
               }}
             >
-              <div
-                className={
-                  'account-form-fields ' +
-                  (option === 1 ? 'sign-in' : 'sign-up')
-                }
-              >
+              <div className={'account-form-fields sign-in'}>
                 <label for='name'>
                   <h3>File Name</h3>
                 </label>
@@ -63,28 +58,32 @@ const UploadModal = ({ handleClose }) => {
                     borderRadius: '10px',
                     color: 'white',
                   }}
-                  ref={emailRef}
+                  ref={nameRef}
                   required
                 />
               </div>
               <span style={{ color: 'red' }}>{err}</span>
               <div>
-                {option === 2 && (
-                  <div>
-                    I have a account{' '}
-                    <span
-                      style={{ color: 'rgb(110 135 253)' }}
-                      onClick={() => {}}
-                    >
-                      Upload
-                    </span>
-                  </div>
-                )}
+                <label for='private'>
+                  <h3>Private</h3>
+                </label>
+                <input
+                  checked={priv}
+                  onChange={() => {
+                    setPrivate(!priv);
+                  }}
+                  id='private'
+                  type='checkbox'
+                  className='toggle'
+                />
               </div>
               <button
                 className='overlay__btn'
                 style={{ backgroundColor: 'rgb(63 84 185 / 56%)' }}
                 type='submit'
+                onClick={() => {
+                  upload();
+                }}
               >
                 Upload
               </button>

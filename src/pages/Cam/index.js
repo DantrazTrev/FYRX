@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Camera from '../../components/camera';
 import UploadModal from '../../components/UploadModal';
+import { useSelector } from 'react-redux';
 import './index.css';
 
 function Cam() {
@@ -18,7 +19,7 @@ function Cam() {
   const [detection, setdetection] = useState('');
   const [Json, setJson] = useState({});
   const [onFinish, setFinish] = useState(false);
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   var toHHMMSS = (secs) => {
     var sec_num = parseInt(secs, 10);
     var hours = Math.floor(sec_num / 3600);
@@ -30,6 +31,7 @@ function Cam() {
       .filter((v, i) => v !== '00' || i > 0)
       .join(':');
   };
+  const { uid } = useSelector((state) => state.firebase.auth);
 
   const downloadFile = async () => {
     const fileName = 'metdata';
@@ -44,10 +46,68 @@ function Cam() {
     document.body.removeChild(link);
   };
 
-  const uploadVideo = async () => {
-    const fileName = 'metdata';
+  const uploadVideo = async (isPrivate, filename) => {
     const json = JSON.stringify(Json);
     const blob = new Blob([json], { type: 'application/json' });
+    if (isPrivate) {
+      let vidId;
+      await firestore
+        .collection(`users/${uid}/videos`)
+        .add({
+          name: filename,
+          src: '',
+          data: '',
+        })
+        .then((res) => {
+          vidId = res.id;
+        });
+      await firebase
+        .storage()
+        .ref(`users/${uid}/videos/${vidId}/metadata.json`)
+        .put(blob);
+      let data = await firebase
+        .storage()
+        .ref(`users/${uid}/videos/${vidId}/metadata.json`)
+        .getDownloadURL();
+      await firebase
+        .storage()
+        .ref(`users/${uid}/videos/${vidId}/video.mp4`)
+        .put(selectedFile);
+      let src = await firebase
+        .storage()
+        .ref(`users/${uid}/videos/${vidId}/video.mp4`)
+        .getDownloadURL();
+      await firestore.doc(`users/${uid}/videos/${vidId}`).update({
+        src: src,
+        data: data,
+      });
+    } else {
+      let vidId;
+      await firestore
+        .collection(`videos`)
+        .add({
+          name: filename,
+          src: '',
+          data: '',
+        })
+        .then((res) => {
+          vidId = res.id;
+        });
+      await firebase.storage().ref(`videos/${vidId}/metadata.json`).put(blob);
+      let data = await firebase
+        .storage()
+        .ref(`videos/${vidId}/metadata.json`)
+        .getDownloadURL();
+      await firebase.storage().ref(``).put(selectedFile);
+      let src = await firebase
+        .storage()
+        .ref(`videos/${vidId}/video.mp4`)
+        .getDownloadURL();
+      await firestore.doc(`videos/${vidId}`).update({
+        src: src,
+        data: data,
+      });
+    }
   };
 
   const handleVideoPlay = () => {
@@ -90,20 +150,10 @@ function Cam() {
     player.current.play();
   };
   const changeHandler = (event) => {
-    setSelectedFile(URL.createObjectURL(event.target.files[0]));
+    setSelectedFile(event.target.files[0]);
     setStart(true);
   };
 
-  // const onFileUpload = () => {
-  //   const formData = new FormData();
-
-  //   // Update the formData object
-  //   formData.append(
-  //     'myFile',
-  //     this.state.selectedFile,
-  //     this.state.selectedFile.name
-  //   );
-  // };
   return (
     <>
       <div className='overlay-cam'>
@@ -119,9 +169,16 @@ function Cam() {
                   onPlay={() => {
                     setPlay(true);
                   }}
-                  onEnded={() => setFinish(true)}
+                  onEnded={() => {
+                    setFinish(true);
+                    setModal(true);
+                  }}
                 >
-                  <source src={selectedFile} id='video' type='video/mp4' />
+                  <source
+                    src={URL.createObjectURL(selectedFile)}
+                    id='video'
+                    type='video/mp4'
+                  />
                 </video>
                 <div class='progress' ref={progress}>
                   <div
@@ -217,6 +274,7 @@ function Cam() {
           handleClose={() => {
             setModal(false);
           }}
+          Uploadfile={uploadVideo}
         />
       )}
     </>
