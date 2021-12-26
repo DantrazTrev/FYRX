@@ -12,6 +12,7 @@
     "@visx/scale": "^2.2.2",
     "@visx/shape": "^2.4.0",
     "@visx/tooltip": "^2.2.2",
+    "axios": "^0.24.0",
     "debounce": "^1.2.1",
     "face-api.js": "^0.22.2",
     "firebase": "^7.24.0",

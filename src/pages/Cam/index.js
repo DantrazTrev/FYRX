@@ -1,10 +1,29 @@
 import * as faceapi from 'face-api.js';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Camera from '../../components/camera';
 import UploadModal from '../../components/UploadModal';
 import { useSelector } from 'react-redux';
 import './index.css';
+
+const colors = {
+  happy: 'rgba(210,185,0)',
+  sad: 'rgba(0,0,139)',
+  angry: 'rgba(128,0,0)',
+  surprised: 'rgba(128,0,128)',
+  disgusted: 'rgba(128,128,0)',
+  neutral: 'rgba(122,122,122)',
+  fearful: 'rgba(100,122,122)',
+};
+const INDEX = {
+  happy: [1, 0, 0, 0, 0, 0, 0],
+  sad: [0, 1, 0, 0, 0, 0, 0],
+  angry: [0, 0, 1, 0, 0, 0, 0],
+  surprised: [0, 0, 0, 1, 0, 0, 0],
+  disgusted: [0, 0, 0, 0, 1, 0, 0],
+  neutral: [0, 0, 0, 0, 0, 1, 0],
+  fearful: [0, 0, 0, 0, 0, 0, 1],
+};
 
 function Cam() {
   const [intilaizing, setintilaizing] = useState(false);
@@ -17,9 +36,10 @@ function Cam() {
   const [play, setPlay] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
   const [detection, setdetection] = useState('');
-  const [Json, setJson] = useState({});
+  const [Json, setJson] = useState([]);
   const [onFinish, setFinish] = useState(false);
   const [modal, setModal] = useState(false);
+  const intervalref = useRef();
   var toHHMMSS = (secs) => {
     var sec_num = parseInt(secs, 10);
     var hours = Math.floor(sec_num / 3600);
@@ -113,7 +133,7 @@ function Cam() {
   };
 
   const handleVideoPlay = () => {
-    setInterval(async () => {
+    intervalref.current = setInterval(async () => {
       if (intilaizing) {
         setintilaizing(false);
       }
@@ -123,22 +143,22 @@ function Cam() {
           new faceapi.TinyFaceDetectorOptions()
         )
         .withFaceExpressions();
+
       if (detections) {
-        console.log(detections);
         //For each face detection
+        console.log(detections);
         if ('expressions' in detections) {
           let status = Object.keys(detections.expressions).reduce((a, b) =>
             detections.expressions[a] > detections.expressions[b] ? a : b
           );
           setdetection(toHHMMSS(player.current.currentTime) + ' ' + status);
-          const time = toHHMMSS(player.current.currentTime);
           let new_json = Json;
-          new_json[player.current.currentTime] = status;
+          new_json.push(INDEX[status]);
           setJson(new_json);
           // const marker = document.createElement('div');
 
           // marker.style.position = 'absolute';
-          // marker.style.backgroundColor = 'red';
+          // marker.style.backgroundColor = colors[status];
           // marker.style.height = '95%';
           // marker.style.width = '2%';
           // marker.style.left = `${
@@ -147,14 +167,26 @@ function Cam() {
 
           // progress.current.appendChild(marker);
         }
+      } else {
+        let new_json = Json;
+        new_json.push([0, 0, 0, 0, 0, 0, 0]);
+        setJson(new_json);
       }
-    }, 100);
-    player.current.play();
+    }, 1000);
+    setTimeout(() => {
+      player.current.play();
+    }, 500);
   };
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setStart(true);
   };
+
+  useEffect(() => {
+    if (onFinish) {
+      clearInterval(intervalref.current);
+    }
+  }, [onFinish]);
 
   return (
     <>

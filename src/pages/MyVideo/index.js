@@ -110,7 +110,7 @@ function MyVideo({ isPrivate }) {
         <h2>{vdata.name}</h2>
       </div>
       <div className='charts'>
-        <Charts />
+        <Charts data={vdata.data} />
       </div>
     </>
   );

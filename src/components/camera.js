@@ -67,6 +67,11 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
       ]).then(startVideo);
     };
     loadModels();
+
+    return () => {
+      videoref.current.pause();
+      videoref.current.src.getTracks()[0].stop();
+    };
   }, [setintilaizing, videoref]);
 
   return (

@@ -6,10 +6,13 @@ import { useFirebase, useFirestore } from 'react-redux-firebase';
 const UploadModal = ({ handleClose, Uploadfile }) => {
   const [err, seterr] = useState(null);
   const [priv, setPrivate] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const nameRef = useRef();
 
-  const upload = () => {
-    Uploadfile(priv, nameRef.current.value);
+  const upload = async () => {
+    Uploadfile(priv, nameRef.current.value).then(() => {
+      handleClose();
+    });
   };
 
   return (
