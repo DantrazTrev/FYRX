@@ -57,6 +57,7 @@ function Cam() {
           name: filename,
           src: '',
           data: '',
+          isPrivate: true,
         })
         .then((res) => {
           vidId = res.id;
@@ -89,6 +90,7 @@ function Cam() {
           name: filename,
           src: '',
           data: '',
+          isPrivate: false,
         })
         .then((res) => {
           vidId = res.id;

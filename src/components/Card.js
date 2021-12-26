@@ -1,18 +1,26 @@
-import React from 'react';
-
-function Card({ item, setvid }) {
+import React, { useState } from 'react';
+import queryString from 'query-string';
+function Card({ item, setvid, setPrivate }) {
+  var thumb = '';
+  if (item.src.includes('youtube')) {
+    let qsp = queryString.parse(item.src);
+    thumb = `http://img.youtube.com/vi/${qsp['https://www.youtube.com/watch?v']}/hqdefault.jpg`;
+    console.log(qsp);
+  }
   return (
     <div
       className='card'
       onClick={() => {
         setvid(item.id);
+        setPrivate();
       }}
     >
-      <img
-        alt='thum'
-        className='thumb'
-        src='https://images.unsplash.com/photo-1593642634443-44adaa06623a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2825&q=80'
-      />
+      {thumb === '' ? (
+        <video alt='thum' className='thumb' src={item.src} />
+      ) : (
+        <img alt='thum' className='thumb' src={thumb} />
+      )}{' '}
+      <div style={{ textAlign: 'center' }}>{item.name}</div>
     </div>
   );
 }
