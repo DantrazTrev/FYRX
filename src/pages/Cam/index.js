@@ -5,25 +5,7 @@ import Camera from '../../components/camera';
 import UploadModal from '../../components/UploadModal';
 import { useSelector } from 'react-redux';
 import './index.css';
-
-const colors = {
-  happy: 'rgba(210,185,0)',
-  sad: 'rgba(0,0,139)',
-  angry: 'rgba(128,0,0)',
-  surprised: 'rgba(128,0,128)',
-  disgusted: 'rgba(128,128,0)',
-  neutral: 'rgba(122,122,122)',
-  fearful: 'rgba(100,122,122)',
-};
-const INDEX = {
-  happy: [1, 0, 0, 0, 0, 0, 0],
-  sad: [0, 1, 0, 0, 0, 0, 0],
-  angry: [0, 0, 1, 0, 0, 0, 0],
-  surprised: [0, 0, 0, 1, 0, 0, 0],
-  disgusted: [0, 0, 0, 0, 1, 0, 0],
-  neutral: [0, 0, 0, 0, 0, 1, 0],
-  fearful: [0, 0, 0, 0, 0, 0, 1],
-};
+import { ARRAY_MAP } from '../../data/';
 
 function Cam() {
   const [intilaizing, setintilaizing] = useState(false);
@@ -153,7 +135,7 @@ function Cam() {
           );
           setdetection(toHHMMSS(player.current.currentTime) + ' ' + status);
           let new_json = Json;
-          new_json.push(INDEX[status]);
+          new_json.push(ARRAY_MAP[status]);
           setJson(new_json);
           // const marker = document.createElement('div');
 

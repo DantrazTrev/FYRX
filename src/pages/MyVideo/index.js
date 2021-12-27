@@ -5,6 +5,7 @@ import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
 import { useSelector } from 'react-redux';
+import Timeline from '../../components/Timeline';
 function MyVideo({ isPrivate }) {
   const { uid } = useSelector((state) => state.firebase.auth);
   const location = useLocation();
@@ -111,6 +112,9 @@ function MyVideo({ isPrivate }) {
       </div>
       <div className='charts'>
         <Charts data={vdata.data} />
+      </div>
+      <div className='charts-timeline'>
+        <Timeline data={vdata.data} />
       </div>
     </>
   );
