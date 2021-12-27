@@ -31,28 +31,30 @@ function MyVideo({ isPrivate }) {
   const [loading, setLoading] = useState(true);
   const [timeline, setTimeline] = useState([]);
   useEffect(() => {
-    firestore
-      .doc(`users/${uid}/videos/${vidId}`)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setVdata(doc.data());
-        } else {
-        }
-      });
-    firebase
-      .storage()
-      .ref(`users/${uid}/videos/${vidId}/metadata.json`)
-      .getDownloadURL()
-      .then((url) => {
-        axios(url).then((res) => {
-          setTimeline(res.data);
-          setTimeout(() => {
-            setLoading(false);
-          }, 500);
+    if (uid) {
+      firestore
+        .doc(`users/${uid}/videos/${vidId}`)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setVdata(doc.data());
+          } else {
+          }
         });
-      });
-  }, [vidId]);
+      firebase
+        .storage()
+        .ref(`users/${uid}/videos/${vidId}/metadata.json`)
+        .getDownloadURL()
+        .then((url) => {
+          axios(url).then((res) => {
+            setTimeline(res.data);
+            setTimeout(() => {
+              setLoading(false);
+            }, 500);
+          });
+        });
+    }
+  }, [vidId, uid]);
 
   useEffect(() => {
     setPlaying(false);

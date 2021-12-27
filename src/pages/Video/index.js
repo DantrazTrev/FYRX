@@ -125,6 +125,7 @@ function Video() {
       </div>
       <div className='charts'>
         <Charts data={timeline} />
+        <button className='overlay__btn'>Add a sample</button>
       </div>
       <div className='charts-timeline'></div>
     </>
