@@ -5,10 +5,13 @@ import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
 import Timeline from '../../components/Timeline';
+import axios from 'axios';
 function Video() {
   const location = useLocation();
   const firestore = useFirestore();
+  const firebase = useFirebase();
   const player = useRef();
+  const [timeline, setTimeline] = useState([]);
   const [progress, setProgress] = useState({
     played: 0,
     playedSeconds: 0,
@@ -25,6 +28,29 @@ function Video() {
   const [ready, setReady] = useState(false);
   const [vdata, setVdata] = useState({});
   const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    firestore
+      .doc(`videos/${vidId}`)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setVdata(doc.data());
+        } else {
+        }
+      });
+    firebase
+      .storage()
+      .ref(`videos/${vidId}/metadata.json`)
+      .getDownloadURL()
+      .then((url) => {
+        axios(url).then((res) => {
+          setTimeline(res.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+        });
+      });
+  }, [vidId]);
 
   useEffect(() => {
     setPlaying(false);
@@ -36,7 +62,7 @@ function Video() {
   const handleProgress = (state) => {
     setProgress(state);
   };
-  if (loading === true && ready == true) {
+  if (loading === true) {
     return <div></div>;
   }
 
@@ -95,13 +121,12 @@ function Video() {
           )}
         </div>
         <h2>{vdata.name}</h2>
+        <Timeline data={timeline} />
       </div>
       <div className='charts'>
-        <Charts data={`videos/${vidId}/metadata.json`} />
+        <Charts data={timeline} />
       </div>
-      <div className='charts-timeline'>
-        <Timeline data={`videos/${vidId}/metadata.json`} />
-      </div>
+      <div className='charts-timeline'></div>
     </>
   );
 }

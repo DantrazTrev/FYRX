@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Stack } from '@visx/shape';
 import { scaleLinear, scaleOrdinal } from '@visx/scale';
-import { transpose } from 'd3-array';
 import { animated, useSpring } from 'react-spring';
 import { COLOR_ARRAY } from '../data';
-import axios from 'axios';
-import { useFirebase } from 'react-redux-firebase';
 // constants
 
 // utils
@@ -18,18 +15,29 @@ function Timeline({ data, animate = true }) {
   const height = 200;
   console.log('gimd', Math.max(...[].concat(...data)));
   var xScale = scaleLinear({
-    domain: [0, data.length - 1],
+    domain: [0, data.length],
   });
   var yScale = scaleLinear({
-    domain: [0, Math.max(...[].concat(...data)) + 100],
+    domain: [0, Math.max(...[].concat(...data)) * 1.4],
   });
 
   // accessors
-
+  const colorScale = scaleOrdinal({
+    domain: range(data[0].length),
+    range: [
+      '#ffc409',
+      '#f14702',
+      '#262d97',
+      'white',
+      '#036ecd',
+      '#9ecadd',
+      '#51666e',
+    ],
+  });
   const getY0 = (d) => yScale(d[0]) ?? 0;
   const getY1 = (d) => yScale(d[1]) ?? 0;
   xScale.range([0, width]);
-  yScale.range([height, 0]);
+  yScale.range([height / 2, 0]);
 
   // generate layers in render to update on touch
 
@@ -46,18 +54,19 @@ function Timeline({ data, animate = true }) {
         />
         <Stack
           data={data}
-          keys={range(data.length)}
-          color={COLOR_ARRAY}
+          keys={range(data[0].length)}
           x={(_, i) => xScale(i) ?? 0}
+          offset='wiggle'
           y0={getY0}
           y1={getY1}
+          color={colorScale}
         >
           {({ stacks, path }) =>
             stacks.map((stack) => {
               // Alternatively use renderprops <Spring to={{ d }}>{tweened => ...}</Spring>
               const pathString = path(stack) || '';
               const tweened = { pathString };
-              const color = COLOR_ARRAY[stack.key];
+              const color = colorScale(stack.key);
 
               return (
                 <g key={`series-${stack.key}`}>

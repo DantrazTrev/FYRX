@@ -17,12 +17,12 @@ export const ARRAY_MAP = {
   neutral: [0, 0, 0, 0, 0, 1, 0],
   fearful: [0, 0, 0, 0, 0, 0, 1],
 };
-export const COLOR_ARRAY = {
-  0: 'rgba(210,185,0)',
-  1: 'rgba(0,0,139)',
-  2: 'rgba(128,0,0)',
-  3: 'rgba(128,0,128)',
-  4: 'rgba(128,128,0)',
-  5: 'rgba(122,122,122)',
-  6: 'rgba(100,122,122)',
-};
+export const COLOR_ARRAY = [
+  'rgba(210,185,0)',
+  'rgba(0,0,139)',
+  'rgba(128,0,0)',
+  'rgba(128,0,128)',
+  'rgba(128,128,0)',
+  'rgba(100,0,122)',
+  'rgba(0,0,0)',
+];
