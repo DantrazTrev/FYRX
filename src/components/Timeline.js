@@ -29,7 +29,7 @@ function Timeline({ data, animate = true }) {
       '#ffc409',
       '#f14702',
       '#262d97',
-      'white',
+      'pink',
       '#036ecd',
       '#9ecadd',
       '#51666e',

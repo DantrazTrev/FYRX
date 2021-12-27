@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Pie from '@visx/shape/lib/shapes/Pie';
 import { Group } from '@visx/group';
 import { animated, useTransition, interpolate } from 'react-spring';
-import axios from 'axios';
-import { withTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
-import { COLOR_MAP } from '../data';
-import { useFirebase } from 'react-redux-firebase';
+
+import { scaleLinear, scaleOrdinal } from '@visx/scale';
 
 const mock_data = [
   { happy: 33 },
@@ -17,9 +15,18 @@ const mock_data = [
   { neutral: 9 },
 ];
 
-const getColor = (label) => {
-  return COLOR_MAP[label];
-};
+const colorScale = scaleOrdinal({
+  domain: Object.keys(mock_data),
+  range: [
+    '#ffc409',
+    '#f14702',
+    '#262d97',
+    'pink',
+    '#036ecd',
+    '#9ecadd',
+    '#51666e',
+  ],
+});
 
 const dataloader = (data) => {
   const pie = [
@@ -102,7 +109,7 @@ function Charts({ data }) {
                 {...pie}
                 animate={true}
                 getColor={(arc) => {
-                  return getColor(arc.data.label);
+                  return colorScale(arc.data.label);
                 }}
                 getKey={(arc) => arc.data.label}
               />

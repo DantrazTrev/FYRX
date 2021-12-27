@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Navigate } from 'react-router-dom';
 import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
@@ -11,6 +11,7 @@ function Video() {
   const firestore = useFirestore();
   const firebase = useFirebase();
   const player = useRef();
+  const [add, setAdd] = useState(false);
   const [timeline, setTimeline] = useState([]);
   const [progress, setProgress] = useState({
     played: 0,
@@ -62,6 +63,9 @@ function Video() {
   const handleProgress = (state) => {
     setProgress(state);
   };
+  if (add === true) {
+    return <Navigate replace to='/app' />;
+  }
   if (loading === true) {
     return <div></div>;
   }
@@ -125,7 +129,9 @@ function Video() {
       </div>
       <div className='charts'>
         <Charts data={timeline} />
-        <button className='overlay__btn'>Add a sample</button>
+        <button className='overlay__btn' onClick={() => setAdd(true)}>
+          Add a sample
+        </button>
       </div>
       <div className='charts-timeline'></div>
     </>

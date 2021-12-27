@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
@@ -9,6 +9,7 @@ import Timeline from '../../components/Timeline';
 import axios from 'axios';
 function MyVideo({ isPrivate }) {
   const { uid } = useSelector((state) => state.firebase.auth);
+  const [add, setAdd] = useState(false);
   const location = useLocation();
   const firestore = useFirestore();
   const firebase = useFirebase();
@@ -66,6 +67,9 @@ function MyVideo({ isPrivate }) {
   const handleProgress = (state) => {
     setProgress(state);
   };
+  if (add === true) {
+    return <Navigate replace to='/app' />;
+  }
   if (loading === true) {
     return <div></div>;
   }
@@ -129,7 +133,15 @@ function MyVideo({ isPrivate }) {
         <Timeline data={timeline} />
       </div>
       <div className='charts'>
-        <Charts data={timeline} />
+        <Charts data={timeline} />{' '}
+        <button
+          className='overlay__btn'
+          onClick={() => {
+            setAdd(true);
+          }}
+        >
+          Add a sample
+        </button>
       </div>
       <div className='charts-timeline'></div>
     </>
