@@ -58,7 +58,7 @@ function Cam() {
         .add({
           name: filename,
           src: '',
-          data: '',
+
           isPrivate: true,
         })
         .then((res) => {
@@ -68,10 +68,6 @@ function Cam() {
         .storage()
         .ref(`users/${uid}/videos/${vidId}/metadata.json`)
         .put(blob);
-      let data = await firebase
-        .storage()
-        .ref(`users/${uid}/videos/${vidId}/metadata.json`)
-        .getDownloadURL();
       await firebase
         .storage()
         .ref(`users/${uid}/videos/${vidId}/video.mp4`)
@@ -82,7 +78,6 @@ function Cam() {
         .getDownloadURL();
       await firestore.doc(`users/${uid}/videos/${vidId}`).update({
         src: src,
-        data: data,
       });
     } else {
       let vidId;
@@ -91,25 +86,22 @@ function Cam() {
         .add({
           name: filename,
           src: '',
-          data: '',
           isPrivate: false,
         })
         .then((res) => {
           vidId = res.id;
         });
       await firebase.storage().ref(`videos/${vidId}/metadata.json`).put(blob);
-      let data = await firebase
+      await firebase
         .storage()
-        .ref(`videos/${vidId}/metadata.json`)
-        .getDownloadURL();
-      await firebase.storage().ref(``).put(selectedFile);
+        .ref(`videos/${vidId}/video.mp4`)
+        .put(selectedFile);
       let src = await firebase
         .storage()
         .ref(`videos/${vidId}/video.mp4`)
         .getDownloadURL();
       await firestore.doc(`videos/${vidId}`).update({
         src: src,
-        data: data,
       });
     }
   };

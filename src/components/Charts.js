@@ -5,6 +5,7 @@ import { animated, useTransition, interpolate } from 'react-spring';
 import axios from 'axios';
 import { withTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
 import { COLOR_MAP } from '../data';
+import { useFirebase } from 'react-redux-firebase';
 
 const mock_data = [
   { happy: 33 },
@@ -15,18 +16,6 @@ const mock_data = [
   { disgusted: 11 },
   { neutral: 9 },
 ];
-
-const dataz = mock_data.map((datum) => ({
-  label: Object.keys(datum)[0],
-  usage: datum[Object.keys(datum)[0]],
-}));
-
-const tooltipStyles = {
-  ...defaultStyles,
-  minWidth: 60,
-  backgroundColor: 'rrgb(30 30 30 / 0.56)',
-  color: 'white',
-};
 
 const getColor = (label) => {
   return COLOR_MAP[label];
@@ -74,18 +63,26 @@ const dataloader = (data) => {
 
 function Charts({ data }) {
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-  const samples = 2;
+  const [samples, setSamples] = useState(0);
   const centerY = 150;
   const centerX = 150;
 
   const [timeline, setTimeline] = useState([]);
 
   useEffect(() => {
-    axios(data).then((res) => {
-      console.log('fetching', res.data);
-      setTimeline(dataloader(res.data));
-    });
+    setTimeline(dataloader(data));
   }, [data]);
+
+  useEffect(() => {
+    setSamples(
+      Math.max.apply(
+        Math,
+        timeline.map(function (o) {
+          return o.usage;
+        })
+      )
+    );
+  }, [timeline]);
 
   return (
     <>

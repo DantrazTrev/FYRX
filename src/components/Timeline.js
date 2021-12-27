@@ -5,37 +5,29 @@ import { transpose } from 'd3-array';
 import { animated, useSpring } from 'react-spring';
 import { COLOR_ARRAY } from '../data';
 import axios from 'axios';
+import { useFirebase } from 'react-redux-firebase';
 // constants
-
-const BACKGROUND = '#transparent';
 
 // utils
 const range = (n) => Array.from(new Array(n), (_, i) => i);
 
 // scales
 
-export default function Timeline({ data, animate = true }) {
+function Timeline({ data, animate = true }) {
   const width = 800;
   const height = 200;
-  const [timeline, setTimeline] = useState([]);
-  useEffect(() => {
-    axios(data).then((res) => {
-      console.log('fetching', res.data);
-      setTimeline(res.data);
-    });
-  }, [data]);
-  const xScale = scaleLinear({
-    domain: [0, timeline.length - 1],
+  console.log('gimd', Math.max(...[].concat(...data)));
+  var xScale = scaleLinear({
+    domain: [0, data.length - 1],
   });
-  const yScale = scaleLinear({
-    domain: [-2, 10],
+  var yScale = scaleLinear({
+    domain: [0, Math.max(...[].concat(...data)) + 100],
   });
 
   // accessors
 
   const getY0 = (d) => yScale(d[0]) ?? 0;
   const getY1 = (d) => yScale(d[1]) ?? 0;
-  if (width < 10) return null;
   xScale.range([0, width]);
   yScale.range([height, 0]);
 
@@ -49,12 +41,12 @@ export default function Timeline({ data, animate = true }) {
           y={0}
           width={width}
           height={height}
-          fill={BACKGROUND}
+          fill={'transparent'}
           rx={14}
         />
         <Stack
-          data={timeline}
-          keys={range(timeline.length)}
+          data={data}
+          keys={range(data.length)}
           color={COLOR_ARRAY}
           x={(_, i) => xScale(i) ?? 0}
           y0={getY0}
@@ -79,3 +71,4 @@ export default function Timeline({ data, animate = true }) {
     </svg>
   );
 }
+export default React.memo(Timeline);

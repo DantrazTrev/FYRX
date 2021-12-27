@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
+import Timeline from '../../components/Timeline';
 function Video() {
   const location = useLocation();
   const firestore = useFirestore();
@@ -24,18 +25,6 @@ function Video() {
   const [ready, setReady] = useState(false);
   const [vdata, setVdata] = useState({});
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    firestore
-      .doc(`videos/${vidId}`)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setVdata(doc.data());
-          setLoading(false);
-        } else {
-        }
-      });
-  }, [vidId]);
 
   useEffect(() => {
     setPlaying(false);
@@ -108,7 +97,10 @@ function Video() {
         <h2>{vdata.name}</h2>
       </div>
       <div className='charts'>
-        <Charts />
+        <Charts data={`videos/${vidId}/metadata.json`} />
+      </div>
+      <div className='charts-timeline'>
+        <Timeline data={`videos/${vidId}/metadata.json`} />
       </div>
     </>
   );

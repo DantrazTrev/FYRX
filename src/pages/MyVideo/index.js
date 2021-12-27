@@ -6,10 +6,12 @@ import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
 import { useSelector } from 'react-redux';
 import Timeline from '../../components/Timeline';
+import axios from 'axios';
 function MyVideo({ isPrivate }) {
   const { uid } = useSelector((state) => state.firebase.auth);
   const location = useLocation();
   const firestore = useFirestore();
+  const firebase = useFirebase();
   const player = useRef();
   const [progress, setProgress] = useState({
     played: 0,
@@ -27,6 +29,7 @@ function MyVideo({ isPrivate }) {
   const [ready, setReady] = useState(false);
   const [vdata, setVdata] = useState({});
   const [loading, setLoading] = useState(true);
+  const [timeline, setTimeline] = useState([]);
   useEffect(() => {
     firestore
       .doc(`users/${uid}/videos/${vidId}`)
@@ -34,9 +37,20 @@ function MyVideo({ isPrivate }) {
       .then((doc) => {
         if (doc.exists) {
           setVdata(doc.data());
-          setLoading(false);
         } else {
         }
+      });
+    firebase
+      .storage()
+      .ref(`users/${uid}/videos/${vidId}/metadata.json`)
+      .getDownloadURL()
+      .then((url) => {
+        axios(url).then((res) => {
+          setTimeline(res.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+        });
       });
   }, [vidId]);
 
@@ -50,7 +64,7 @@ function MyVideo({ isPrivate }) {
   const handleProgress = (state) => {
     setProgress(state);
   };
-  if (loading === true && ready == true) {
+  if (loading === true) {
     return <div></div>;
   }
 
@@ -109,13 +123,13 @@ function MyVideo({ isPrivate }) {
           )}
         </div>
         <h2>{vdata.name}</h2>
+
+        <Timeline data={timeline} />
       </div>
       <div className='charts'>
-        <Charts data={vdata.data} />
+        <Charts data={timeline} />
       </div>
-      <div className='charts-timeline'>
-        <Timeline data={vdata.data} />
-      </div>
+      <div className='charts-timeline'></div>
     </>
   );
 }
