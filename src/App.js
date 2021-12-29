@@ -11,6 +11,7 @@ import store, { rrfProps } from './redux/store';
 import Library from './pages/Library';
 import Video from './pages/Video';
 import MyVideo from './pages/MyVideo';
+import CamMode from './pages/CamMode';
 function App() {
   const [Anim, setAnim] = useState();
   const canvasRef = useRef();
@@ -26,7 +27,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={<Home Anim={Anim} />} />
-              <Route path='app' element={<Cam />} />
+              <Route path='watch' element={<Cam />} />
+              <Route path='app' element={<CamMode />} />
               <Route path='dashboard' element={<Library />} />
               <Route path='video' element={<Video />} />
               <Route path='v' element={<MyVideo />} />

@@ -64,7 +64,7 @@ function Video() {
     setProgress(state);
   };
   if (add === true) {
-    return <Navigate replace to='/app' />;
+    return <Navigate replace to={`/app?id=${vidId}`} />;
   }
   if (loading === true) {
     return <div></div>;
@@ -128,8 +128,12 @@ function Video() {
         <Timeline data={timeline} />
       </div>
       <div className='charts'>
-        <Charts data={timeline} />
-        <button className='overlay__btn' onClick={() => setAdd(true)}>
+        {!add && <Charts data={timeline} />}
+        <button
+          className='overlay__btn'
+          style={{ width: '100%' }}
+          onClick={() => setAdd(true)}
+        >
           Add a sample
         </button>
       </div>

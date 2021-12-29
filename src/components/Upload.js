@@ -7,7 +7,7 @@ function Upload() {
       <div
         className='card'
         onClick={() => {
-          Nav('/app');
+          Nav('/watch');
         }}
       >
         <img className='ico' alt='ico' src={require('../assets/add.png')} />
