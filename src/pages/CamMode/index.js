@@ -109,7 +109,9 @@ function CamMode() {
     });
     console.log(time_copy);
     setTimeline(time_copy);
-    const blob = new Blob([time_copy], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(time_copy)], {
+      type: 'application/json',
+    });
     if (vidId) {
       await firebase.storage().ref(`videos/${vidId}/metadata.json`).put(blob);
       navigator(`/video?id=${vidId}`);
@@ -118,7 +120,7 @@ function CamMode() {
         .storage()
         .ref(`users/${uid}/videos/${vuid}/metadata.json`)
         .put(blob);
-      navigator(`/v?id=${vidId}`);
+      navigator(`/v?id=${vuid}`);
     }
   };
 

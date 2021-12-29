@@ -68,7 +68,7 @@ function MyVideo({ isPrivate }) {
     setProgress(state);
   };
   if (add === true) {
-    return <Navigate replace to='/app' />;
+    return <Navigate replace to={`/app?videoid=${vidId}`} />;
   }
   if (loading === true) {
     return <div></div>;
@@ -136,6 +136,7 @@ function MyVideo({ isPrivate }) {
         <Charts data={timeline} />{' '}
         <button
           className='overlay__btn'
+          style={{ width: '100%' }}
           onClick={() => {
             setAdd(true);
           }}
