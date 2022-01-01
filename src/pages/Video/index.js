@@ -5,6 +5,7 @@ import queryString, { stringify } from 'query-string';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import Charts from '../../components/Charts';
 import Timeline from '../../components/Timeline';
+import { RotatingPlane } from 'better-react-spinkit';
 import axios from 'axios';
 function Video() {
   const location = useLocation();
@@ -67,7 +68,7 @@ function Video() {
     return <Navigate replace to={`/app?id=${vidId}`} />;
   }
   if (loading === true) {
-    return <div></div>;
+    return <RotatingPlane color='rgb(121 121 121 / 56%)' size={55} />;
   }
 
   return (

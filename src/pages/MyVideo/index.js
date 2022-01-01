@@ -7,6 +7,7 @@ import Charts from '../../components/Charts';
 import { useSelector } from 'react-redux';
 import Timeline from '../../components/Timeline';
 import axios from 'axios';
+import { RotatingPlane } from 'better-react-spinkit';
 function MyVideo({ isPrivate }) {
   const { uid } = useSelector((state) => state.firebase.auth);
   const [add, setAdd] = useState(false);
@@ -71,7 +72,7 @@ function MyVideo({ isPrivate }) {
     return <Navigate replace to={`/app?videoid=${vidId}`} />;
   }
   if (loading === true) {
-    return <div></div>;
+    return <RotatingPlane color='rgb(121 121 121 / 56%)' size={55} />;
   }
 
   return (
