@@ -1,14 +1,16 @@
 /* eslint no-use-before-define: 0 */ // --> OFF
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as faceapi from 'face-api.js';
 
 function Camera({ videoref, handleVideoPlay, setintilaizing }) {
   const videoHeight = 180;
 
   const videoWidth = 240;
+  const streamref = useRef();
 
   useEffect(() => {
+    let stream;
     const startVideo = () => {
       if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
@@ -42,6 +44,7 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
         .getUserMedia({ video: true })
         .then(function (stream) {
           // Older browsers may not have srcObject
+          streamref.current = stream;
           if ('srcObject' in videoref.current) {
             videoref.current.srcObject = stream;
           } else {
@@ -69,8 +72,10 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
     loadModels();
 
     return () => {
-      videoref.current.pause();
-      videoref.current.src.getTracks()[0].stop();
+      console.log(streamref);
+      streamref.current.getTracks().forEach(function (track) {
+        track.stop();
+      });
     };
   }, [setintilaizing, videoref]);
 
