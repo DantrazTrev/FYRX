@@ -197,22 +197,24 @@ function CamMode() {
                 >
                   <source src={selectedFile} id='video' type='video/mp4' />
                 </video>
-                <div class='progress' ref={progress}>
-                  <div
-                    class='progress-filled'
-                    style={
-                      play
-                        ? {
-                            width: `${
-                              (player.current.currentTime /
-                                player.current.duration) *
-                              100
-                            }%`,
-                          }
-                        : {}
-                    }
-                  ></div>
-                </div>
+                {!onFinish && (
+                  <div class='progress' ref={progress}>
+                    <div
+                      class='progress-filled'
+                      style={
+                        play
+                          ? {
+                              width: `${
+                                (player.current.currentTime /
+                                  player.current.duration) *
+                                100
+                              }%`,
+                            }
+                          : {}
+                      }
+                    ></div>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -226,21 +228,20 @@ function CamMode() {
               }}
             ></div>
           ) : (
-            <div className='text'>{detection}</div>
+            !onFinish && <div className='text'>{detection}</div>
           )}
           {onFinish && (
-            <label className='overlay__btn' for='download'>
-              Upload Video
-            </label>
+            <button
+              className='overlay__btn'
+              style={{ margin: 'auto', marginTop: '40px' }}
+              id='download'
+              onClick={() => {
+                uploadVideo();
+              }}
+            >
+              Upload The Sample
+            </button>
           )}
-          <button
-            style={{ display: 'none' }}
-            className='overlay__btn'
-            id='download'
-            onClick={() => {
-              uploadVideo();
-            }}
-          />
         </div>
 
         {start ? (
