@@ -5,18 +5,26 @@ import Camera from '../../components/camera';
 import UploadModal from '../../components/UploadModal';
 import { useSelector } from 'react-redux';
 import './index.css';
+import ReactPlayer from 'react-player';
 import { ARRAY_MAP } from '../../data/';
+import { isValidHttpUrl } from '../../utils/helperFunction';
 
 function Cam() {
   const [intilaizing, setintilaizing] = useState(false);
   const videoref = useRef();
   const player = useRef();
-  const progress = useRef();
   const firestore = useFirestore();
   const firebase = useFirebase();
   const [start, setStart] = useState(false);
   const [play, setPlay] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
+  const [url, seturl] = useState('');
+  const [prog, setProgress] = useState({
+    played: 0,
+    playedSeconds: 0,
+    loaded: 0,
+    loadedSeconds: 0,
+  });
   const [detection, setdetection] = useState('');
   const [Json, setJson] = useState([]);
   const [onFinish, setFinish] = useState(false);
@@ -47,7 +55,9 @@ function Cam() {
     link.click();
     document.body.removeChild(link);
   };
-
+  const handleProgress = (state) => {
+    setProgress(state);
+  };
   const uploadVideo = async (isPrivate, filename) => {
     const json = JSON.stringify(Json);
     const blob = new Blob([json], { type: 'application/json' });
@@ -125,7 +135,13 @@ function Cam() {
           let status = Object.keys(detections.expressions).reduce((a, b) =>
             detections.expressions[a] > detections.expressions[b] ? a : b
           );
-          setdetection(toHHMMSS(player.current.currentTime) + ' ' + status);
+          setdetection(
+            toHHMMSS(
+              player.current.currentTime || player.current.getCurrentTime()
+            ) +
+              ' ' +
+              status
+          );
           let new_json = Json;
           new_json.push(ARRAY_MAP[status]);
           setJson(new_json);
@@ -154,6 +170,14 @@ function Cam() {
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setStart(true);
+  };
+  const urlref = useRef();
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (isValidHttpUrl(urlref.current.value)) {
+      seturl(urlref.current.value);
+    } else {
+    }
   };
 
   useEffect(() => {
@@ -188,7 +212,7 @@ function Cam() {
                     type='video/mp4'
                   />
                 </video>
-                <div class='progress' ref={progress}>
+                <div class='progress'>
                   <div
                     class='progress-filled'
                     style={
@@ -204,6 +228,47 @@ function Cam() {
                     }
                   ></div>
                 </div>
+              </>
+            )}
+            {url && (
+              <>
+                <ReactPlayer
+                  className='react-player'
+                  height={501}
+                  width={906}
+                  onReady={() => {
+                    setStart(true);
+                  }}
+                  config={{
+                    youtube: {
+                      playerVars: {
+                        autoplay: 0,
+                        iv_load_policy: 3,
+                        modestbranding: 1,
+                        playsinline: 1,
+                        rel: 0,
+                        showinfo: 0,
+                        disablekb: 0,
+                      },
+                    },
+                  }}
+                  style={{ borderRadius: '20px', objectFit: 'cover' }}
+                  light={false}
+                  ref={player}
+                  url={url}
+                  onProgress={handleProgress}
+                  controls={false}
+                />
+                {start && (
+                  <div class='progress'>
+                    <div
+                      class='progress-filled'
+                      style={{
+                        width: `${prog.played * 100}%`,
+                      }}
+                    ></div>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -226,16 +291,27 @@ function Cam() {
               >
                 Choose Video
               </label>
-              <label
-                for='file'
+              <form
                 style={{
-                  backgroundColor: 'rgb(30 30 30 / 56%)',
-                  color: 'rgb(255 255 255 / 78%)',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
                 }}
-                className='overlay__btn'
+                onSubmit={onSubmit}
               >
-                Use Link
-              </label>
+                <input
+                  type='url'
+                  style={{
+                    backgroundColor: 'rgb(30 30 30 / 56%)',
+                    color: 'rgb(255 255 255 / 78%)',
+                    display: 'block',
+                    textAlign: 'center',
+                  }}
+                  ref={urlref}
+                  className='overlay__btn'
+                  placeholder=' Use Link'
+                />
+              </form>
             </div>
           ) : (
             <div className='text'>{detection}</div>
