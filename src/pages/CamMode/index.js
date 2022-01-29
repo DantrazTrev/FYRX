@@ -153,7 +153,9 @@ function CamMode() {
           let status = Object.keys(detections.expressions).reduce((a, b) =>
             detections.expressions[a] > detections.expressions[b] ? a : b
           );
-          setdetection(toHHMMSS(player.current.currentTime) + ' ' + status);
+          setdetection(
+            toHHMMSS(player.current.getCurrentTime()) + ' ' + status
+          );
           let new_json = Json;
           new_json.push(ARRAY_MAP[status]);
           setJson(new_json);
@@ -176,7 +178,7 @@ function CamMode() {
       }
     }, 1000);
     setTimeout(() => {
-      player.current.play();
+      setPlay(true);
     }, 500);
   };
 
@@ -194,8 +196,11 @@ function CamMode() {
             {url && (
               <>
                 <ReactPlayer
+                  className='react-player'
                   height={501}
+                  ref={player}
                   width={906}
+                  playing={play}
                   onReady={() => {
                     setStart(true);
                   }}
@@ -214,7 +219,6 @@ function CamMode() {
                   }}
                   style={{ borderRadius: '20px', objectFit: 'cover' }}
                   light={false}
-                  ref={player}
                   url={url}
                   onPlay={() => {
                     setPlay(true);
@@ -223,6 +227,7 @@ function CamMode() {
                     setPlay(false);
                   }}
                   onEnded={() => {
+                    setPlay(false);
                     setFinish(true);
                   }}
                   onProgress={handleProgress}
