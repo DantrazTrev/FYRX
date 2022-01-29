@@ -8,6 +8,8 @@ import queryString, { stringify } from 'query-string';
 import { ARRAY_MAP } from '../../data/';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+import ReactPlayer from 'react-player';
 function CamMode() {
   const [intilaizing, setintilaizing] = useState(false);
   const navigator = useNavigate();
@@ -19,7 +21,7 @@ function CamMode() {
   const firebase = useFirebase();
   const [start, setStart] = useState(false);
   const [play, setPlay] = useState(false);
-  const [selectedFile, setSelectedFile] = useState();
+  const [url, seturl] = useState();
   const [detection, setdetection] = useState('');
   const [timeline, setTimeline] = useState([]);
   const [Json, setJson] = useState([]);
@@ -30,6 +32,12 @@ function CamMode() {
       parseBooleans: true,
     }).id
   );
+  const [prog, setProgress] = useState({
+    played: 0,
+    playedSeconds: 0,
+    loaded: 0,
+    loadedSeconds: 0,
+  });
   const [vuid, setvuid] = useState(
     queryString.parse(location.search, {
       parseNumbers: true,
@@ -49,7 +57,9 @@ function CamMode() {
       .join(':');
   };
   const { uid } = useSelector((state) => state.firebase.auth);
-
+  const handleProgress = (state) => {
+    setProgress(state);
+  };
   useEffect(() => {
     if (vidId) {
       firestore
@@ -57,7 +67,7 @@ function CamMode() {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            setSelectedFile(doc.data().src);
+            seturl(doc.data().src);
           } else {
           }
         });
@@ -79,7 +89,7 @@ function CamMode() {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            setSelectedFile(doc.data().src);
+            seturl(doc.data().src);
           } else {
           }
         });
@@ -181,37 +191,51 @@ function CamMode() {
       <div className='overlay-cam'>
         <div id='preview'>
           <div id='thumb-cont'>
-            {selectedFile && (
+            {url && (
               <>
-                <video
-                  ref={player}
+                <ReactPlayer
                   height={501}
                   width={906}
+                  onReady={() => {
+                    setStart(true);
+                  }}
+                  config={{
+                    youtube: {
+                      playerVars: {
+                        autoplay: 0,
+                        iv_load_policy: 3,
+                        modestbranding: 1,
+                        playsinline: 1,
+                        rel: 0,
+                        showinfo: 0,
+                        disablekb: 0,
+                      },
+                    },
+                  }}
                   style={{ borderRadius: '20px', objectFit: 'cover' }}
+                  light={false}
+                  ref={player}
+                  url={url}
                   onPlay={() => {
                     setPlay(true);
+                  }}
+                  onPause={() => {
+                    setPlay(false);
                   }}
                   onEnded={() => {
                     setFinish(true);
                   }}
-                >
-                  <source src={selectedFile} id='video' type='video/mp4' />
-                </video>
+                  onProgress={handleProgress}
+                  controls={false}
+                />
+
                 {!onFinish && (
                   <div class='progress' ref={progress}>
                     <div
                       class='progress-filled'
-                      style={
-                        play
-                          ? {
-                              width: `${
-                                (player.current.currentTime /
-                                  player.current.duration) *
-                                100
-                              }%`,
-                            }
-                          : {}
-                      }
+                      style={{
+                        width: `${prog.played * 100}%`,
+                      }}
                     ></div>
                   </div>
                 )}

@@ -78,14 +78,20 @@ function Cam() {
         .storage()
         .ref(`users/${uid}/videos/${vidId}/metadata.json`)
         .put(blob);
-      await firebase
-        .storage()
-        .ref(`users/${uid}/videos/${vidId}/video.mp4`)
-        .put(selectedFile);
-      let src = await firebase
-        .storage()
-        .ref(`users/${uid}/videos/${vidId}/video.mp4`)
-        .getDownloadURL();
+      let src;
+      if (!url) {
+        await firebase
+          .storage()
+          .ref(`users/${uid}/videos/${vidId}/video.mp4`)
+          .put(selectedFile);
+        src = await firebase
+          .storage()
+          .ref(`users/${uid}/videos/${vidId}/video.mp4`)
+          .getDownloadURL();
+      } else {
+        src = url;
+      }
+
       await firestore.doc(`users/${uid}/videos/${vidId}`).update({
         src: src,
       });
@@ -102,14 +108,19 @@ function Cam() {
           vidId = res.id;
         });
       await firebase.storage().ref(`videos/${vidId}/metadata.json`).put(blob);
-      await firebase
-        .storage()
-        .ref(`videos/${vidId}/video.mp4`)
-        .put(selectedFile);
-      let src = await firebase
-        .storage()
-        .ref(`videos/${vidId}/video.mp4`)
-        .getDownloadURL();
+      let src;
+      if (!url) {
+        await firebase
+          .storage()
+          .ref(`videos/${vidId}/video.mp4`)
+          .put(selectedFile);
+        src = await firebase
+          .storage()
+          .ref(`videos/${vidId}/video.mp4`)
+          .getDownloadURL();
+      } else {
+        src = url;
+      }
       await firestore.doc(`videos/${vidId}`).update({
         src: src,
       });
@@ -121,6 +132,7 @@ function Cam() {
       if (intilaizing) {
         setintilaizing(false);
       }
+      if (!play) return;
       const detections = await faceapi
         .detectSingleFace(
           videoref.current,
@@ -201,6 +213,9 @@ function Cam() {
                   onPlay={() => {
                     setPlay(true);
                   }}
+                  onPause={() => {
+                    setPlay(false);
+                  }}
                   onEnded={() => {
                     setFinish(true);
                     setModal(true);
@@ -256,6 +271,16 @@ function Cam() {
                   light={false}
                   ref={player}
                   url={url}
+                  onPlay={() => {
+                    setPlay(true);
+                  }}
+                  onPause={() => {
+                    setPlay(false);
+                  }}
+                  onEnded={() => {
+                    setFinish(true);
+                    setModal(true);
+                  }}
                   onProgress={handleProgress}
                   controls={false}
                 />
