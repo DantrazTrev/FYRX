@@ -12,6 +12,7 @@ import Library from './pages/Library';
 import Video from './pages/Video';
 import MyVideo from './pages/MyVideo';
 import CamMode from './pages/CamMode';
+import Calibra from './pages/Calibra';
 function App() {
   const [Anim, setAnim] = useState();
   const canvasRef = useRef();
@@ -32,6 +33,7 @@ function App() {
               <Route path='dashboard' element={<Library />} />
               <Route path='video' element={<Video />} />
               <Route path='v' element={<MyVideo />} />
+              <Route path='settings' element={<Calibra />} />
               <Route path='*' element={<Lost />} />
             </Routes>
           </BrowserRouter>
