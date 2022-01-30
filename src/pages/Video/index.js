@@ -44,14 +44,22 @@ function Video() {
       .storage()
       .ref(`videos/${vidId}/metadata.json`)
       .getDownloadURL()
-      .then((url) => {
-        axios(url).then((res) => {
-          setTimeline(res.data);
+      .then(
+        (url) => {
+          axios(url).then((res) => {
+            setTimeline(res.data);
+            setTimeout(() => {
+              setLoading(false);
+            }, 500);
+          });
+        },
+        () => {
+          setTimeline([]);
           setTimeout(() => {
             setLoading(false);
           }, 500);
-        });
-      });
+        }
+      );
   }, [vidId]);
 
   useEffect(() => {
@@ -126,10 +134,16 @@ function Video() {
           )}
         </div>
         <h2>{vdata.name}</h2>
-        <Timeline data={timeline} />
+        {timeline.length !== 0 && <Timeline data={timeline} />}
       </div>
       <div className='charts'>
-        {!add && <Charts data={timeline} />}
+        {timeline.length === 0 ? (
+          <svg width={330} height={350}>
+            No data available
+          </svg>
+        ) : (
+          <> {!add && <Charts data={timeline} />}</>
+        )}
         <button
           className='overlay__btn'
           style={{ width: '100%' }}
@@ -138,7 +152,6 @@ function Video() {
           Add a sample
         </button>
       </div>
-      <div className='charts-timeline'></div>
     </>
   );
 }

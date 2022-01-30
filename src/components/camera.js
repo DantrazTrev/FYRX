@@ -54,6 +54,7 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
           videoref.current.onloadedmetadata = function (e) {
             videoref.current.play();
           };
+          setintilaizing(false);
         })
         .catch(function (err) {
           console.log(err.name + ': ' + err.message);
@@ -91,7 +92,7 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
             muted
             height={videoHeight}
             width={videoWidth}
-            onPlay={handleVideoPlay}
+            onPlay={() => handleVideoPlay()}
           />
         </div>
       </div>

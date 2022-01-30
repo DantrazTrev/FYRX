@@ -134,11 +134,13 @@ function CamMode() {
     }
   };
 
-  const handleVideoPlay = () => {
+  const handleVideoPlay = (play = false) => {
+    console.log(intilaizing, play, 'handleVideoPlay');
+    if (intilaizing) return;
+    setPlay(true);
+    if (!play) return;
+
     intervalref.current = setInterval(async () => {
-      if (intilaizing) {
-        setintilaizing(false);
-      }
       const detections = await faceapi
         .detectSingleFace(
           videoref.current,
@@ -154,11 +156,17 @@ function CamMode() {
             detections.expressions[a] > detections.expressions[b] ? a : b
           );
           setdetection(
-            toHHMMSS(player.current.getCurrentTime()) + ' ' + status
+            toHHMMSS(
+              player.current.currentTime || player.current.getCurrentTime()
+            ) +
+              ' ' +
+              status
           );
+
           let new_json = Json;
           new_json.push(ARRAY_MAP[status]);
           setJson(new_json);
+
           // const marker = document.createElement('div');
 
           // marker.style.position = 'absolute';
@@ -177,11 +185,7 @@ function CamMode() {
         setJson(new_json);
       }
     }, 1000);
-    setTimeout(() => {
-      setPlay(true);
-    }, 500);
   };
-
   useEffect(() => {
     if (onFinish) {
       clearInterval(intervalref.current);
@@ -199,8 +203,8 @@ function CamMode() {
                   className='react-player'
                   height={501}
                   ref={player}
-                  width={906}
                   playing={play}
+                  width={906}
                   onReady={() => {
                     setStart(true);
                   }}
@@ -222,6 +226,7 @@ function CamMode() {
                   url={url}
                   onPlay={() => {
                     setPlay(true);
+                    handleVideoPlay(true);
                   }}
                   onPause={() => {
                     setPlay(false);
@@ -277,6 +282,7 @@ function CamMode() {
           <>
             <Camera
               handleVideoPlay={handleVideoPlay}
+              playing={play}
               videoref={videoref}
               setintilaizing={setintilaizing}
             />

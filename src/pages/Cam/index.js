@@ -126,13 +126,13 @@ function Cam() {
       });
     }
   };
+  const handleVideoPlay = (play = false) => {
+    console.log(intilaizing, play, 'handleVideoPlay');
+    if (intilaizing) return;
+    player.current.play();
+    if (!play) return;
 
-  const handleVideoPlay = () => {
     intervalref.current = setInterval(async () => {
-      if (intilaizing) {
-        setintilaizing(false);
-      }
-      if (!play) return;
       const detections = await faceapi
         .detectSingleFace(
           videoref.current,
@@ -154,9 +154,11 @@ function Cam() {
               ' ' +
               status
           );
+
           let new_json = Json;
           new_json.push(ARRAY_MAP[status]);
           setJson(new_json);
+
           // const marker = document.createElement('div');
 
           // marker.style.position = 'absolute';
@@ -175,9 +177,6 @@ function Cam() {
         setJson(new_json);
       }
     }, 1000);
-    setTimeout(() => {
-      player.current.play();
-    }, 500);
   };
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -186,7 +185,7 @@ function Cam() {
   const urlref = useRef();
   const onSubmit = (event) => {
     event.preventDefault();
-    if (isValidHttpUrl(urlref.current.value)) {
+    if (ReactPlayer.canPlay(urlref.current.value)) {
       seturl(urlref.current.value);
     } else {
     }
@@ -212,6 +211,7 @@ function Cam() {
                   style={{ borderRadius: '20px', objectFit: 'cover' }}
                   onPlay={() => {
                     setPlay(true);
+                    handleVideoPlay(true);
                   }}
                   onPause={() => {
                     setPlay(false);
@@ -245,10 +245,11 @@ function Cam() {
                 </div>
               </>
             )}
-            {url && (
+            {url && !intilaizing && (
               <>
                 <ReactPlayer
                   className='react-player'
+                  playing={play && !intilaizing}
                   height={501}
                   width={906}
                   onReady={() => {
@@ -271,6 +272,10 @@ function Cam() {
                   light={false}
                   ref={player}
                   url={url}
+                  onStart={() => {
+                    setPlay(true);
+                    handleVideoPlay(true);
+                  }}
                   onPlay={() => {
                     setPlay(true);
                   }}
@@ -334,7 +339,7 @@ function Cam() {
                   }}
                   ref={urlref}
                   className='overlay__btn'
-                  placeholder=' Use Link'
+                  placeholder=' Use Link (beta)'
                 />
               </form>
             </div>
@@ -363,7 +368,7 @@ function Cam() {
           />
         </div>
 
-        {start ? (
+        {start && !onFinish ? (
           <>
             <Camera
               handleVideoPlay={handleVideoPlay}
