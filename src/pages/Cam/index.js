@@ -61,6 +61,11 @@ function Cam() {
   const uploadVideo = async (isPrivate, filename) => {
     const json = JSON.stringify(Json);
     const blob = new Blob([json], { type: 'application/json' });
+    const promE = Json.reduce((r, a) => r.map((b, i) => a[i] + b)).reduce(
+      (iMax, x, i, arr) => (x > arr[iMax] ? i : iMax),
+      0
+    );
+    console.log(promE);
     if (isPrivate) {
       let vidId;
       await firestore
@@ -68,7 +73,7 @@ function Cam() {
         .add({
           name: filename,
           src: '',
-
+          emotion_id: promE,
           isPrivate: true,
         })
         .then((res) => {
@@ -102,6 +107,7 @@ function Cam() {
         .add({
           name: filename,
           src: '',
+          emotion_id: promE,
           isPrivate: false,
         })
         .then((res) => {
@@ -129,7 +135,7 @@ function Cam() {
   const handleVideoPlay = (play = false) => {
     console.log(intilaizing, play, 'handleVideoPlay');
     if (intilaizing) return;
-    player.current.play();
+    if (url === '') player.current?.play();
     if (!play) return;
 
     intervalref.current = setInterval(async () => {
@@ -274,10 +280,10 @@ function Cam() {
                   url={url}
                   onStart={() => {
                     setPlay(true);
-                    handleVideoPlay(true);
                   }}
                   onPlay={() => {
                     setPlay(true);
+                    handleVideoPlay(true);
                   }}
                   onPause={() => {
                     setPlay(false);

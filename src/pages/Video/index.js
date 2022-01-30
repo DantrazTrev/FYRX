@@ -84,6 +84,7 @@ function Video() {
       <div className='videoPlayer'>
         <ReactPlayer
           className='react-player'
+          style={{ margin: 'auto' }}
           config={{
             youtube: {
               playerVars: {

@@ -74,6 +74,10 @@
   margin: 50px;
   height: 150px;
   border-radius: 20px;
+  transition: 0.4s ease-in-out;
+}
+.card:hover{
+  transform: scale(1.12);
 }
 .card .thumb {
   width: 100%;

@@ -13,7 +13,7 @@ const Cards = ({ currTab }) => {
   const [upv, setUp] = useState([]);
   const [vid, setvid] = useState('');
   const [isPrivate, setPrivate] = useState(false);
-
+  const [filteredUpls, setFilterd] = useState([]);
   useEffect(() => {
     const temp = [];
     const upls = [];
@@ -46,6 +46,13 @@ const Cards = ({ currTab }) => {
   } else if (vid !== '' && isPrivate) {
     return <Navigate replace to={`/v?id=${vid}`} push={true} />;
   }
+  const filter = (emotion_id) => {
+    let new_Exvs = exv.filter((vid) => vid.emotion_id === emotion_id);
+    const url = new URL(window.location);
+    url.searchParams.set('emotion_id', emotion_id);
+    window.history.pushState({}, '', url);
+    setFilterd(new_Exvs);
+  };
   return (
     <>
       {currTab === 'ex' && (
@@ -64,7 +71,7 @@ const Cards = ({ currTab }) => {
       )}
       {currTab === 'em' && (
         <div className='Cards'>
-          <Emotions />
+          <Emotions filter={filter} filteredUpls={filteredUpls} />
         </div>
       )}
       {currTab === 'up' && (

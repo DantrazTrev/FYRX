@@ -20,7 +20,9 @@ function Card({ item, setvid, setPrivate }) {
       ) : (
         <img alt='thum' className='thumb' src={thumb} />
       )}{' '}
-      <div style={{ textAlign: 'center' }}>{item.name}</div>
+      <div id='card-title' style={{ textAlign: 'center' }}>
+        {item.name}
+      </div>
     </div>
   );
 }
