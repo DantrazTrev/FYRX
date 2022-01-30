@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import ReactPlayer from 'react-player';
+import Timeline from '../../components/Timeline';
 function CamMode() {
   const [intilaizing, setintilaizing] = useState(false);
   const navigator = useNavigate();
@@ -265,20 +266,23 @@ function CamMode() {
             !onFinish && <div className='text'>{detection}</div>
           )}
           {onFinish && (
-            <button
-              className='overlay__btn'
-              style={{ margin: 'auto', marginTop: '40px' }}
-              id='download'
-              onClick={() => {
-                uploadVideo();
-              }}
-            >
-              Upload The Sample
-            </button>
+            <>
+              <Timeline data={Json} />
+              <button
+                className='overlay__btn'
+                style={{ margin: 'auto', marginTop: '40px' }}
+                id='download'
+                onClick={() => {
+                  uploadVideo();
+                }}
+              >
+                Upload The Sample
+              </button>
+            </>
           )}
         </div>
 
-        {start ? (
+        {start && !onFinish ? (
           <>
             <Camera
               handleVideoPlay={handleVideoPlay}

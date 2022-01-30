@@ -31,7 +31,7 @@ function Sidebar({ currTab, setTab }) {
             }}
           >
             {' '}
-            <h3>▷ Your Uploads</h3>
+            <h3>🎥 Your Uploads</h3>
           </li>
         )}
       </ul>
