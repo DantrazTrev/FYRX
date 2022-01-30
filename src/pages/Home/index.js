@@ -36,16 +36,14 @@ const Home = ({ Anim }) => {
             </button>
 
             <button
+              style={{ marginLeft: '30px' }}
               class='overlay__btn overlay__btn--colors'
               onClick={() => {
                 Nav('dashboard');
               }}
             >
-              {' '}
-              <span>
-                Get Started
-                <span class='overlay__btn-emoji'>🦆</span>
-              </span>
+              {''}
+              <span>Get Started 🦆</span>
             </button>
           </div>
         </div>

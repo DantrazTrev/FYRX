@@ -16,9 +16,9 @@ function Card({ item, setvid, setPrivate }) {
       }}
     >
       {thumb === '' ? (
-        <video alt='thum' className='thumb' src={item.src} />
+        <video alt='thum' preload='auto' className='thumb' src={item.src} />
       ) : (
-        <img alt='thum' className='thumb' src={thumb} />
+        <img alt='thum' preload='auto' className='thumb' src={thumb} />
       )}{' '}
       <div id='card-title' style={{ textAlign: 'center' }}>
         {item.name}
