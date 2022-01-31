@@ -29,10 +29,13 @@ const Home = ({ Anim }) => {
             <strong>Plus it's all free</strong>
           </p>
           <div class='overlay__btns'>
-            <button class='overlay__btn overlay__btn--transparent'>
-              <a href='www.dantraz.codes' target='_blank'>
-                View Tutorial
-              </a>
+            <button
+              class='overlay__btn overlay__btn--transparent'
+              onClick={() => {
+                Nav('tutorials');
+              }}
+            >
+              View Tutorial
             </button>
 
             <button
