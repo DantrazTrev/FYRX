@@ -1,18 +1,23 @@
 import React, { useState, useRef } from 'react';
 import '../modal.css';
-
+import lottieJson from '../assets/upload.json';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
+import { ThreeBounce } from 'better-react-spinkit';
+import Lottie from 'react-lottie-player';
 
 const UploadModal = ({ handleClose, Uploadfile }) => {
   const [err, seterr] = useState(null);
   const [priv, setPrivate] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const nameRef = useRef();
-
+  const [loading, setLoading] = useState(false);
   const upload = async () => {
-    Uploadfile(priv, nameRef.current.value).then(() => {
-      handleClose();
-    });
+    if (nameRef.current.value !== '') {
+      setLoading(true);
+      Uploadfile(priv, nameRef.current.value).then(() => {
+        handleClose();
+      });
+    }
   };
 
   return (
@@ -31,11 +36,17 @@ const UploadModal = ({ handleClose, Uploadfile }) => {
             alt='svgImg'
             src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjQiIGhlaWdodD0iMjQiCnZpZXdCb3g9IjAgMCAxNzIgMTcyIgpzdHlsZT0iIGZpbGw6IzAwMDAwMDsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIGZvbnQtZmFtaWx5PSJub25lIiBmb250LXdlaWdodD0ibm9uZSIgZm9udC1zaXplPSJub25lIiB0ZXh0LWFuY2hvcj0ibm9uZSIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0wLDE3MnYtMTcyaDE3MnYxNzJ6IiBmaWxsPSJub25lIj48L3BhdGg+PGcgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMzLjczMzcyLDIzLjU5OTYxbC0xMC4xMzQxMSwxMC4xMzQxMWw1Mi4yNjYyOCw1Mi4yNjYyOGwtNTIuMjY2MjgsNTIuMjY2MjhsMTAuMTM0MTEsMTAuMTM0MTFsNTIuMjY2MjgsLTUyLjI2NjI4bDUyLjI2NjI4LDUyLjI2NjI4bDEwLjEzNDExLC0xMC4xMzQxMWwtNTIuMjY2MjgsLTUyLjI2NjI4bDUyLjI2NjI4LC01Mi4yNjYyOGwtMTAuMTM0MTEsLTEwLjEzNDExbC01Mi4yNjYyOCw1Mi4yNjYyOHoiPjwvcGF0aD48L2c+PC9nPjwvc3ZnPg=='
           />{' '}
-          <img
+          {/* <img
             alt='lgo'
             className='lgo'
             style={{ width: '500px' }}
             src={require('../assets/upload.png')}
+          /> */}
+          <Lottie
+            loop
+            animationData={lottieJson}
+            play={loading}
+            style={{ width: 400, height: 400, top: 0, position: 'absolute' }}
           />
           <div className='modal-right'>
             <h1>Upload</h1>
@@ -88,7 +99,7 @@ const UploadModal = ({ handleClose, Uploadfile }) => {
                   upload();
                 }}
               >
-                Upload
+                {loading ? <ThreeBounce color={'white'} /> : 'Upload'}
               </button>
             </form>
           </div>

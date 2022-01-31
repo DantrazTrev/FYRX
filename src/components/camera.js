@@ -87,6 +87,7 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
         <div id='browser ' className='browser'>
           <video
             className='video'
+            style={{ backgroundColor: 'black' }}
             ref={videoref}
             autoPlay
             muted

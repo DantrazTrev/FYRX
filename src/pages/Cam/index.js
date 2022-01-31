@@ -8,6 +8,7 @@ import './index.css';
 import ReactPlayer from 'react-player';
 import { ARRAY_MAP } from '../../data/';
 import { isValidHttpUrl } from '../../utils/helperFunction';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function Cam() {
   const [intilaizing, setintilaizing] = useState(false);
@@ -29,6 +30,7 @@ function Cam() {
   const [Json, setJson] = useState([]);
   const [onFinish, setFinish] = useState(false);
   const [modal, setModal] = useState(false);
+  const nav = useNavigate();
   const intervalref = useRef();
   var toHHMMSS = (secs) => {
     var sec_num = parseInt(secs, 10);
@@ -131,6 +133,7 @@ function Cam() {
         src: src,
       });
     }
+    nav('/dashboard');
   };
   const handleVideoPlay = (play = false) => {
     console.log(intilaizing, play, 'handleVideoPlay');
