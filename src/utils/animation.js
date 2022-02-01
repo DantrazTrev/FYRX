@@ -201,13 +201,10 @@ export const Animate = (canvas) => {
   }
 
   // Animate!
-  app.ticker.add(()=>{
-    orbs.forEach((orb) => {
-      orb.update();
-      orb.render();
-    });})
-
- 
+  orbs.forEach((orb) => {
+    orb.update();
+    orb.render();
+  });
 };
 
 export const Random = () => {
