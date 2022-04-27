@@ -33,8 +33,7 @@ function App() {
               <Route path='dashboard' element={<Library />} />
               <Route path='video' element={<Video />} />
               <Route path='v' element={<MyVideo />} />
-              <Route path='settings' element={<Calibra />} />
-              <Route path='*' element={<Lost />} />
+              <Route path='*' element={<Calibra />} />
             </Routes>
           </BrowserRouter>
         </ReactReduxFirebaseProvider>
