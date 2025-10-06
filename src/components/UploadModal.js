@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import '../modal.css';
 import lottieJson from '../assets/upload.json';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
-import { ThreeBounce } from 'better-react-spinkit';
+import { motion } from 'framer-motion';
 import Lottie from 'react-lottie-player';
 
 const UploadModal = ({ handleClose, Uploadfile }) => {
@@ -99,7 +99,17 @@ const UploadModal = ({ handleClose, Uploadfile }) => {
                   upload();
                 }}
               >
-                {loading ? <ThreeBounce color={'white'} /> : 'Upload'}
+                {loading ? (
+                  <motion.div
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="flex space-x-1 justify-center"
+                  >
+                    <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  </motion.div>
+                ) : 'Upload'}
               </button>
             </form>
           </div>
