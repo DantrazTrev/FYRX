@@ -1,12 +1,14 @@
 /* eslint no-use-before-define: 0 */ // --> OFF
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Camera as CameraIcon, CameraOff, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import * as faceapi from 'face-api.js';
 
 function Camera({ videoref, handleVideoPlay, setintilaizing }) {
-  const videoHeight = 180;
-
-  const videoWidth = 240;
+  const [isActive, setIsActive] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const streamref = useRef();
 
   useEffect(() => {
@@ -41,7 +43,13 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
       }
 
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ 
+          video: { 
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: 'user'
+          } 
+        })
         .then(function (stream) {
           // Older browsers may not have srcObject
           streamref.current = stream;
@@ -53,51 +61,124 @@ function Camera({ videoref, handleVideoPlay, setintilaizing }) {
           }
           videoref.current.onloadedmetadata = function (e) {
             videoref.current.play();
+            setIsActive(true);
+            setIsLoading(false);
           };
           setintilaizing(false);
         })
         .catch(function (err) {
           console.log(err.name + ': ' + err.message);
+          setHasError(true);
+          setIsLoading(false);
+          setintilaizing(false);
         });
     };
+    
     const loadModels = async () => {
       const MODEL_URL = process.env.PUBLIC_URL + '/models';
       setintilaizing(true);
-      Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-      ]).then(startVideo);
+      setIsLoading(true);
+      try {
+        await Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+          faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+          faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+          faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+        ]);
+        startVideo();
+      } catch (error) {
+        console.error('Error loading models:', error);
+        setHasError(true);
+        setIsLoading(false);
+        setintilaizing(false);
+      }
     };
+    
     loadModels();
 
     return () => {
-      console.log(streamref);
-      streamref.current.getTracks().forEach(function (track) {
-        track.stop();
-      });
+      if (streamref.current) {
+        streamref.current.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
     };
   }, [setintilaizing, videoref]);
 
   return (
-    <>
-      <div className='overlay-cam'></div>
-      <div className='mockup'>
-        <div id='browser ' className='browser'>
-          <video
-            className='video'
-            style={{ backgroundColor: 'black' }}
-            ref={videoref}
-            autoPlay
-            muted
-            height={videoHeight}
-            width={videoWidth}
-            onPlay={() => handleVideoPlay()}
-          />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="camera-container"
+    >
+      <div className="camera-header">
+        <div className="camera-title">
+          <CameraIcon className="w-5 h-5" />
+          <span>Live Camera Feed</span>
+        </div>
+        <div className="camera-status">
+          {isLoading && (
+            <div className="status-item loading">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Initializing...</span>
+            </div>
+          )}
+          {isActive && !hasError && (
+            <div className="status-item active">
+              <CheckCircle className="w-4 h-4" />
+              <span>Active</span>
+            </div>
+          )}
+          {hasError && (
+            <div className="status-item error">
+              <AlertCircle className="w-4 h-4" />
+              <span>Error</span>
+            </div>
+          )}
         </div>
       </div>
-    </>
+
+      <div className="camera-preview">
+        {isLoading && (
+          <div className="camera-loading">
+            <Loader2 className="w-8 h-8 animate-spin" />
+            <p>Loading AI models...</p>
+          </div>
+        )}
+        
+        {hasError && (
+          <div className="camera-error">
+            <CameraOff className="w-12 h-12" />
+            <p>Camera access denied or unavailable</p>
+            <p className="error-detail">
+              Please allow camera access to analyze emotions
+            </p>
+          </div>
+        )}
+        
+        {isActive && !hasError && (
+          <div className="camera-video-container">
+            <video
+              className="camera-video"
+              ref={videoref}
+              autoPlay
+              muted
+              playsInline
+              onPlay={() => handleVideoPlay()}
+            />
+            <div className="camera-overlay">
+              <div className="face-detection-box"></div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="camera-info">
+        <p className="camera-description">
+          Your camera feed is processed locally for emotion detection
+        </p>
+      </div>
+    </motion.div>
   );
 }
 
