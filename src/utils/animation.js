@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { KawaseBlurFilter } from '@pixi/filter-kawase-blur';
-import SimplexNoise from 'simplex-noise';
+import { createNoise2D } from 'simplex-noise';
 import hsl from 'hsl-to-hex';
 import debounce from 'debounce';
 // return a random number within a range
@@ -14,7 +14,7 @@ function map(n, start1, end1, start2, end2) {
 }
 
 // Create a new simplex noise instance
-const simplex = new SimplexNoise();
+const simplex = createNoise2D();
 // ColorPalette class
 class ColorPalette {
   constructor() {
@@ -139,9 +139,9 @@ class Orb {
 
   update() {
     // self similar "psuedo-random" or noise values at a given point in "time"
-    const xNoise = simplex.noise2D(this.xOff, this.xOff);
-    const yNoise = simplex.noise2D(this.yOff, this.yOff);
-    const scaleNoise = simplex.noise2D(this.xOff, this.yOff);
+    const xNoise = simplex(this.xOff, this.xOff);
+    const yNoise = simplex(this.yOff, this.yOff);
+    const scaleNoise = simplex(this.xOff, this.yOff);
 
     // map the xNoise/yNoise values (between -1 and 1) to a point within the orb's bounds
     this.x = map(xNoise, -1, 1, this.bounds['x'].min, this.bounds['x'].max);

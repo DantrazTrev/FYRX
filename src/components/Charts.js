@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { TrendingUp, Users, Clock, BarChart3 } from 'lucide-react';
 import Pie from '@visx/shape/lib/shapes/Pie';
 import { Group } from '@visx/group';
 import { animated, useTransition, interpolate } from 'react-spring';
-
 import { scaleLinear, scaleOrdinal } from '@visx/scale';
+import './Charts.css';
 
-const mock_data = [
-  { happy: 33 },
-  { sad: 10 },
-  { angry: 20 },
-  { surprised: 23 },
-  { fearful: 10 },
-  { disgusted: 11 },
-  { neutral: 9 },
-];
+const emotionColors = {
+  happy: '#10b981',
+  sad: '#3b82f6',
+  angry: '#ef4444',
+  surprised: '#8b5cf6',
+  disgusted: '#f59e0b',
+  neutral: '#6b7280',
+  fearful: '#ec4899',
+};
+
+const emotionIcons = {
+  happy: '😊',
+  sad: '😢',
+  angry: '😠',
+  surprised: '😲',
+  disgusted: '🤢',
+  neutral: '😐',
+  fearful: '😨',
+};
 
 const colorScale = scaleOrdinal({
-  domain: Object.keys(mock_data),
-  range: [
-    '#ffc409',
-    '#f14702',
-    '#262d97',
-    'pink',
-    '#036ecd',
-    '#9ecadd',
-    '#51666e',
-  ],
+  domain: Object.keys(emotionColors),
+  range: Object.values(emotionColors),
 });
 
 const dataloader = (data) => {
@@ -69,10 +73,11 @@ const dataloader = (data) => {
 };
 
 function Charts({ data }) {
-  const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+  const margin = { top: 20, right: 20, bottom: 20, left: 20 };
   const [samples, setSamples] = useState(0);
-  const centerY = 150;
-  const centerX = 150;
+  const [totalSamples, setTotalSamples] = useState(0);
+  const centerY = 120;
+  const centerX = 120;
 
   const [timeline, setTimeline] = useState([]);
 
@@ -81,54 +86,148 @@ function Charts({ data }) {
   }, [data]);
 
   useEffect(() => {
-    setSamples(
-      Math.max.apply(
-        Math,
-        timeline.map(function (o) {
-          return o.usage;
-        })
-      )
+    const maxUsage = Math.max.apply(
+      Math,
+      timeline.map(function (o) {
+        return o.usage;
+      })
     );
+    const total = timeline.reduce((sum, item) => sum + item.usage, 0);
+    setSamples(maxUsage);
+    setTotalSamples(total);
   }, [timeline]);
 
+  const getTopEmotion = () => {
+    if (timeline.length === 0) return null;
+    return timeline.reduce((prev, current) => 
+      prev.usage > current.usage ? prev : current
+    );
+  };
+
+  const topEmotion = getTopEmotion();
+
   return (
-    <>
-      <svg width={330} height={350}>
-        <Group top={centerY + margin.top} left={centerX + margin.left}>
-          <Pie
-            data={timeline}
-            pieValue={(d) => {
-              return d.usage;
-            }}
-            outerRadius={150}
-            cornerRadius={3}
-            padAngle={0.005}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="charts-container"
+    >
+      {/* Header */}
+      <div className="charts-header">
+        <div className="charts-title">
+          <BarChart3 className="w-6 h-6" />
+          <h3>Emotion Analysis</h3>
+        </div>
+        <div className="charts-stats">
+          <div className="stat-item">
+            <TrendingUp className="w-4 h-4" />
+            <span>{totalSamples} samples</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart */}
+      <div className="chart-wrapper">
+        <svg width={280} height={280}>
+          <Group top={centerY + margin.top} left={centerX + margin.left}>
+            <Pie
+              data={timeline}
+              pieValue={(d) => d.usage}
+              outerRadius={100}
+              innerRadius={40}
+              cornerRadius={4}
+              padAngle={0.01}
+            >
+              {(pie) => (
+                <AnimatedPie
+                  {...pie}
+                  animate={true}
+                  getColor={(arc) => colorScale(arc.data.label)}
+                  getKey={(arc) => arc.data.label}
+                />
+              )}
+            </Pie>
+          </Group>
+        </svg>
+        
+        {/* Center Info */}
+        <div className="chart-center">
+          <div className="center-icon">
+            {topEmotion && emotionIcons[topEmotion.label]}
+          </div>
+          <div className="center-label">
+            {topEmotion ? topEmotion.label.charAt(0).toUpperCase() + topEmotion.label.slice(1) : 'No Data'}
+          </div>
+          <div className="center-percentage">
+            {topEmotion ? Math.round((topEmotion.usage / totalSamples) * 100) : 0}%
+          </div>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="charts-legend">
+        {timeline.map((item, index) => (
+          <motion.div
+            key={item.label}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="legend-item"
           >
-            {(pie) => (
-              <AnimatedPie
-                {...pie}
-                animate={true}
-                getColor={(arc) => {
-                  return colorScale(arc.data.label);
-                }}
-                getKey={(arc) => arc.data.label}
-              />
-            )}
-          </Pie>
-        </Group>
-      </svg>
-      <h3 style={{ textAlign: 'center' }}>Data Samples:{samples}</h3>
-      {samples < 5 && (
-        <>
-          <br />
-          <h3 style={{ textAlign: 'center', color: 'red' }}>
-            ⚠ Low Data samples
-            <br />
-            (This data isn't reliable)
-          </h3>
-        </>
+            <div 
+              className="legend-color" 
+              style={{ backgroundColor: emotionColors[item.label] }}
+            />
+            <div className="legend-content">
+              <div className="legend-label">
+                <span className="legend-emoji">{emotionIcons[item.label]}</span>
+                <span className="legend-name">
+                  {item.label.charAt(0).toUpperCase() + item.label.slice(1)}
+                </span>
+              </div>
+              <div className="legend-stats">
+                <span className="legend-count">{item.usage}</span>
+                <span className="legend-percentage">
+                  ({Math.round((item.usage / totalSamples) * 100)}%)
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Data Quality Warning */}
+      {samples < 5 && totalSamples > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="data-warning"
+        >
+          <div className="warning-icon">⚠️</div>
+          <div className="warning-content">
+            <div className="warning-title">Low Data Quality</div>
+            <div className="warning-message">
+              This analysis may not be reliable due to insufficient data samples.
+            </div>
+          </div>
+        </motion.div>
       )}
-    </>
+
+      {/* Empty State */}
+      {totalSamples === 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="empty-state"
+        >
+          <div className="empty-icon">📊</div>
+          <div className="empty-title">No Data Available</div>
+          <div className="empty-message">
+            Start analyzing a video to see emotion data here.
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
 
