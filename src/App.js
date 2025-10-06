@@ -21,7 +21,7 @@ function App() {
   }, []);
   return (
     <>
-      <canvas ref={canvasRef} class='orb-canvas'></canvas>
+      <canvas ref={canvasRef} className='orb-canvas'></canvas>
 
       <Provider store={store}>
         <ReactReduxFirebaseProvider {...rrfProps}>
